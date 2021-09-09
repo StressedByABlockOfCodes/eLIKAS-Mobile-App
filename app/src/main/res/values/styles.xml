@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Widget.BottomNavigationView.Colored" parent="Widget.MaterialComponents.BottomNavigationView.Colored">
+        <item name="labelVisibilityMode">labeled</item>
+    </style>
+
+    <style name="Theme.ELIKAS.FullScreen" parent="Theme.ELIKAS">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+</resources>
