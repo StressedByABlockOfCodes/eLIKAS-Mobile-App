@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var progressBar: ProgressBar
-    //private lateinit var swipeRefresh: SwipeRefreshLayout
+    private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var webView: WebView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,15 +37,15 @@ class MainActivity : AppCompatActivity() {
 
         //webView = findViewById(R.id.webView)
         progressBar = binding.progressBar
-        //swipeRefresh = binding.swipeRefresh
+        swipeRefresh = binding.swipeRefresh
         webView = binding.webView
         val bottomNavView: BottomNavigationView = binding.bottomNavView
         bottomNavView.itemTextColor = null
         bottomNavView.itemIconTintList = null
 
+        //WebView.setWebContentsDebuggingEnabled(false)
         initWebView()
-        webView.loadUrl(PROD_PAGE_URL)
-
+        pullUpToRefresh()
         bottomNavView.setOnItemSelectedListener { menuItem ->
             when(menuItem.itemId){
                 R.id.back -> {
@@ -66,6 +66,19 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun pullUpToRefresh() {
+        swipeRefresh.setOnRefreshListener {
+            webView.reload()
+            //webView.loadUrl("javascript:window.location.reload( true )")
+        }
+        swipeRefresh.setProgressBackgroundColorSchemeResource(R.color.colorPrimary)
+        swipeRefresh.setColorSchemeResources(
+            R.color.colorPrimaryAccent,
+            R.color.colorSecondary,
+            R.color.colorSecondaryAccent,
+        )
+    }
+
     @SuppressLint("SetJavaScriptEnabled")
     private fun initWebView() {
         webView.webViewClient = MyWebViewClient()
@@ -74,15 +87,19 @@ class MainActivity : AppCompatActivity() {
         webView.settings.useWideViewPort = true             // Enable responsive layout
         webView.settings.loadWithOverviewMode = true        // Zoom out if the content width is greater than the width of the viewport
         webView.settings.domStorageEnabled = true
+
+        webView.loadUrl(PROD_PAGE_URL)
     }
 
     private inner class MyWebViewClient : WebViewClient() {
 
-        /*override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-             view.loadUrl(url)
-            progressBar.show()
+        override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+
+            view.loadUrl(url)
+            progressBar.visibility = View.VISIBLE
             return true
-            if (Uri.parse(url).host == "www.example.com") {
+
+            /*if (Uri.parse(url).host == "www.example.com") {
                 // This is my web site, so do not override; let my WebView load the page
                 return false
             }
@@ -90,8 +107,8 @@ class MainActivity : AppCompatActivity() {
             Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
                 startActivity(this)
             }
-            return true
-        }*/
+            return true*/
+        }
 
         override fun onReceivedError(
             view: WebView?,
@@ -119,7 +136,7 @@ class MainActivity : AppCompatActivity() {
 
         override fun onPageFinished(view: WebView, url: String) {
             super.onPageFinished(view, url)
-            //swipe.setRefreshing(false)
+            swipeRefresh.isRefreshing = false
             progressBar.visibility = View.GONE
         }
     }
