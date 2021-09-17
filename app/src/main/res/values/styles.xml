@@ -9,4 +9,14 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <style name="Widget.TextView.Bold" parent="ThemeOverlay.AppCompat">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="Widget.Button.Base" parent="ThemeOverlay.AppCompat">
+        <item name="android:padding">12dp</item>
+        <item name="android:backgroundTint">@color/colorPrimaryAccent</item>
+    </style>
+
 </resources>

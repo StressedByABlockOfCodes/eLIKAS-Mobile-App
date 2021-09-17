@@ -4,7 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -13,12 +15,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ELIKAS">
-        <meta-data android:name="android.webkit.WebView.MetricsOptOut"
+
+        <meta-data
+            android:name="android.webkit.WebView.MetricsOptOut"
             android:value="true" />
+
         <activity
             android:name=".SplashScreenActivity"
-            android:screenOrientation="portrait"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.ELIKAS.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,10 +31,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
+            android:fitsSystemWindows="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            android:fitsSystemWindows="true" />
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".LocationPermissionActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+
+        <!-- for android 29+ -->
+        <service
+            android:name=".service.ForegroundOnlyLocationService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="location">
+
+            <!-- Any inner elements would go here. -->
+        </service>
     </application>
 
 </manifest>

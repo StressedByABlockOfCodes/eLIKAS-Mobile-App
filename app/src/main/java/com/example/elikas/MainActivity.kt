@@ -1,12 +1,30 @@
+/*  Copyright 2019 Google LLC
+ *  Copyright 2021 eLIKAS
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+*/
+
+
 package com.example.elikas
 
+import android.Manifest
+import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.*
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
-import android.webkit.WebChromeClient
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -14,12 +32,32 @@ import com.example.elikas.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import android.net.http.SslError
 import android.util.Log
-
-import android.webkit.SslErrorHandler
+import android.webkit.*
 
 import android.widget.Toast
+import java.net.MalformedURLException
+import androidx.core.app.ActivityCompat
 
-
+import android.content.pm.PackageManager
+import android.location.Location
+import android.net.Uri
+import android.os.IBinder
+import android.provider.Settings
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.example.elikas.BuildConfig.APPLICATION_ID
+import com.example.elikas.service.ForegroundOnlyLocationService
+import com.example.elikas.utils.toText
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.*
+import com.google.android.gms.tasks.Task
+import com.google.android.material.snackbar.Snackbar
+import android.location.LocationManager
+import android.view.WindowManager
+import com.example.elikas.utils.SharedPreferenceUtil
 
 
 class MainActivity : AppCompatActivity() {
@@ -28,6 +66,30 @@ class MainActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var webView: WebView
+    private lateinit var userID: String
+    private lateinit var launcher: ActivityResultLauncher<IntentSenderRequest>
+
+    private lateinit var locationManager: LocationManager
+    private var foregroundOnlyLocationServiceBound = false
+    // Provides location updates for while-in-use feature.
+    private var foregroundOnlyLocationService: ForegroundOnlyLocationService? = null
+    // Listens for location broadcasts from ForegroundOnlyLocationService.
+    private lateinit var foregroundOnlyBroadcastReceiver: ForegroundOnlyBroadcastReceiver
+    private lateinit var sharedPreferences: SharedPreferences
+    // Monitors connection to the while-in-use service.
+    private val foregroundOnlyServiceConnection = object : ServiceConnection {
+
+        override fun onServiceConnected(name: ComponentName, service: IBinder) {
+            val binder = service as ForegroundOnlyLocationService.LocalBinder
+            foregroundOnlyLocationService = binder.service
+            foregroundOnlyLocationServiceBound = true
+        }
+
+        override fun onServiceDisconnected(name: ComponentName) {
+            foregroundOnlyLocationService = null
+            foregroundOnlyLocationServiceBound = false
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +97,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //webView = findViewById(R.id.webView)
+        foregroundOnlyBroadcastReceiver = ForegroundOnlyBroadcastReceiver()
+        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        //sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+
         progressBar = binding.progressBar
         swipeRefresh = binding.swipeRefresh
         webView = binding.webView
@@ -46,6 +111,7 @@ class MainActivity : AppCompatActivity() {
         //WebView.setWebContentsDebuggingEnabled(false)
         initWebView()
         pullUpToRefresh()
+        onActivityResult()
         bottomNavView.setOnItemSelectedListener { menuItem ->
             when(menuItem.itemId){
                 R.id.back -> {
@@ -54,11 +120,11 @@ class MainActivity : AppCompatActivity() {
                     return@setOnItemSelectedListener true
                 }
                 R.id.home -> {
-                    webView.loadUrl(PROD_PAGE_URL + "home")
+                    webView.loadUrl(CURRENT_URL + "home")
                     return@setOnItemSelectedListener true
                 }
                 R.id.profile -> {
-                    webView.loadUrl(PROD_PAGE_URL + "profile")
+                    webView.loadUrl(CURRENT_URL + "profile")
                     return@setOnItemSelectedListener true
                 }
             }
@@ -66,17 +132,39 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun pullUpToRefresh() {
-        swipeRefresh.setOnRefreshListener {
-            webView.reload()
-            //webView.loadUrl("javascript:window.location.reload( true )")
-        }
-        swipeRefresh.setProgressBackgroundColorSchemeResource(R.color.colorPrimary)
-        swipeRefresh.setColorSchemeResources(
-            R.color.colorPrimaryAccent,
-            R.color.colorSecondary,
-            R.color.colorSecondaryAccent,
+    override fun onStart() {
+        super.onStart()
+
+        //sharedPreferences.registerOnSharedPreferenceChangeListener(this)
+        // TODO: Call this when Android interface of courier is called or check user role in onStart if it is a Courier
+        val serviceIntent = Intent(this, ForegroundOnlyLocationService::class.java)
+        bindService(serviceIntent, foregroundOnlyServiceConnection, Context.BIND_AUTO_CREATE)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+            foregroundOnlyBroadcastReceiver,
+            IntentFilter(
+                ForegroundOnlyLocationService.ACTION_FOREGROUND_ONLY_LOCATION_BROADCAST)
         )
+    }
+
+    override fun onPause() {
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(
+            foregroundOnlyBroadcastReceiver
+        )
+        super.onPause()
+    }
+
+    override fun onStop() {
+        if (foregroundOnlyLocationServiceBound) {
+            unbindService(foregroundOnlyServiceConnection)
+            foregroundOnlyLocationServiceBound = false
+        }
+        //sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
+
+        super.onStop()
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -87,8 +175,20 @@ class MainActivity : AppCompatActivity() {
         webView.settings.useWideViewPort = true             // Enable responsive layout
         webView.settings.loadWithOverviewMode = true        // Zoom out if the content width is greater than the width of the viewport
         webView.settings.domStorageEnabled = true
+        webView.addJavascriptInterface(WebAppInterface(this), "Android")
 
-        webView.loadUrl(PROD_PAGE_URL)
+        webView.loadUrl(CURRENT_URL + "home")
+    }
+
+    private fun pullUpToRefresh() {
+        swipeRefresh.setOnRefreshListener {
+            webView.reload()
+            //webView.loadUrl("javascript:window.location.reload( true )")
+        }
+        swipeRefresh.setProgressBackgroundColorSchemeResource(R.color.colorPrimary)
+        swipeRefresh.setColorSchemeResources(
+            R.color.colorSecondary
+        )
     }
 
     private inner class MyWebViewClient : WebViewClient() {
@@ -116,7 +216,7 @@ class MainActivity : AppCompatActivity() {
             description: String?,
             failingUrl: String?
         ) {
-            Toast.makeText(applicationContext, "No internet connection", Toast.LENGTH_LONG).show()
+            Toast.makeText(applicationContext, description, Toast.LENGTH_LONG).show()
             //webView.loadUrl("file:///android_asset/lost.html")
         }
 
@@ -138,6 +238,14 @@ class MainActivity : AppCompatActivity() {
             super.onPageFinished(view, url)
             swipeRefresh.isRefreshing = false
             progressBar.visibility = View.GONE
+
+            /*try {
+                val cookies: String = CookieManager.getInstance().getCookie(url)
+                Log.d("Cookie", cookies)
+            } catch (e: MalformedURLException) {
+                // TODO Auto-generated catch block
+                e.printStackTrace()
+            }*/
         }
     }
 
@@ -155,10 +263,188 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun checkPermissions(): Boolean {
+        return PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this,
+            Manifest.permission.ACCESS_FINE_LOCATION)
+    }
+
+    private fun startLocationPermissionRequest() {
+        ActivityCompat.requestPermissions(this, arrayOf(ACCESS_FINE_LOCATION),
+            REQUEST_PERMISSIONS_REQUEST_CODE)
+    }
+
+    private fun requestPermissions() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_FINE_LOCATION)) {
+            Log.i(TAG, "Displaying permission rationale to provide additional context.")
+            startActivity(Intent(this, LocationPermissionActivity::class.java))
+            finish()
+            /*Snackbar.make(findViewById(R.id.activity_main), R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+                .setAction(R.string.ok) {
+                    startLocationPermissionRequest()
+                }.show()*/
+        } else {
+            Log.i(TAG, "Requesting permission")
+            startLocationPermissionRequest()
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when (requestCode) {
+            REQUEST_PERMISSIONS_REQUEST_CODE -> when {
+                // Permission was cancelled.
+                grantResults.isEmpty() -> Log.d(TAG, "User interaction was cancelled.")
+                // Permission was granted.
+                grantResults[0] == PackageManager.PERMISSION_GRANTED -> {
+                    if(isGPSProviderEnabled())
+                        foregroundOnlyLocationService?.subscribeToLocationUpdates()
+                    else
+                        enableGPSPrompt()
+                }
+                else -> {
+                    // Permission denied.
+                    startActivity(Intent(this, LocationPermissionActivity::class.java))
+                    finish()
+                    /*Snackbar.make(findViewById(R.id.activity_main), R.string.permission_denied_explanation, Snackbar.LENGTH_INDEFINITE)
+                        .setAction(R.string.settings) {
+                            // Build intent that displays the App settings screen.
+                            val intent = Intent().apply {
+                                action = Settings.ACTION_APPLICATION_DETAILS_SETTINGS
+                                data = Uri.fromParts("package", APPLICATION_ID, null)
+                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            }
+                            startActivity(intent)
+                        }
+                        .show()*/
+                }
+            }
+        }
+    }
+
+    private fun isGPSProviderEnabled(): Boolean =
+        locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+
+    private fun enableGPSPrompt() {
+        val locationRequest = LocationRequest.create()
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+        val result = LocationServices.getSettingsClient(this)
+            .checkLocationSettings(builder.build())
+
+        result.addOnCompleteListener { task ->
+            try {
+                val response = task.getResult(ApiException::class.java)
+                // All location settings are satisfied. The client can initialize location
+                // requests here.
+                foregroundOnlyLocationService?.subscribeToLocationUpdates()
+            } catch (exception: ApiException) {
+                when (exception.statusCode) {
+                    LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
+                        try {
+                            // Cast to a resolvable exception.
+                            val resolvable: ResolvableApiException = exception as ResolvableApiException
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            //resolvable.startResolutionForResult(this, LocationRequest.PRIORITY_HIGH_ACCURACY)
+
+                            val intentSenderRequest = IntentSenderRequest.Builder(resolvable.resolution).build()
+                            launcher.launch(intentSenderRequest)
+
+                        } catch (e: IntentSender.SendIntentException) {
+                            // Ignore the error.
+                        } catch (e: ClassCastException) {
+                            // Ignore, should be an impossible error.
+                        }
+                    }
+                    LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
+                        // Location settings are not satisfied. But could be fixed by showing the
+                        // user a dialog.
+
+                        // Location settings are not satisfied. However, we have no way to fix the
+                        // settings so we won't show the dialog.
+                    }
+                }
+            }
+        }
+    }
+
+    private fun onActivityResult() {
+        launcher = this.registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+            when (result.resultCode) {
+                Activity.RESULT_OK -> {
+                    Log.i("Status: ","On")
+                    //GPS is enabled so start location updates
+                    foregroundOnlyLocationService?.subscribeToLocationUpdates()
+                    Toast.makeText(applicationContext, "GPS ENABLED", Toast.LENGTH_SHORT).show()
+                }
+                Activity.RESULT_CANCELED -> {
+                    Log.i("Status: ","Off")
+                    Toast.makeText(applicationContext, "GPS NOT ENABLED", Toast.LENGTH_SHORT).show()
+                    startActivity(Intent(this, LocationPermissionActivity::class.java))
+                    finish()
+                }
+                else -> {
+                    Log.i("Status: ","Off")
+                }
+            }
+        }
+    }
+
+    /**
+     * Receiver for location broadcasts from [ForegroundOnlyLocationService].
+     */
+    private inner class ForegroundOnlyBroadcastReceiver : BroadcastReceiver() {
+
+        override fun onReceive(context: Context, intent: Intent) {
+            val location = intent.getParcelableExtra<Location>(
+                ForegroundOnlyLocationService.EXTRA_LOCATION
+            )
+
+            if (location != null) {
+                //logResultsToScreen("Foreground location: ${location.toText()}")
+                Log.d(TAG, "${location.toText()}")
+            }
+        }
+    }
+
+    /** Instantiate the interface and set the context  */
+    private inner class WebAppInterface(private val mContext: Context) {
+
+        //This is called by the courier
+        @JavascriptInterface
+        fun startSendingLocations(user_id: String, user_type: String) {
+            Log.i("User ID", user_id)
+            Log.i("User Type", user_type)
+            SharedPreferenceUtil.saveUserID(applicationContext, user_id.toInt())
+            //Toast.makeText(mContext, user_id, Toast.LENGTH_SHORT).show()
+            // TODO: check for the user role and return if it's not courier
+            userID = user_id
+
+            if (!checkPermissions()) {
+                requestPermissions()
+            } else {
+                if(isGPSProviderEnabled())
+                    foregroundOnlyLocationService?.subscribeToLocationUpdates()
+                else
+                    enableGPSPrompt()
+            }
+        }
+
+        @JavascriptInterface
+        fun logout() {
+            foregroundOnlyLocationService?.unsubscribeToLocationUpdates()
+            SharedPreferenceUtil.reset(applicationContext)
+        }
+    }
+
     companion object {
-        const val DEV_PAGE_URL = "http://192.168.1.4:8000/"
+        const val DEV_PAGE_URL = "http://192.168.1.9:8000/"
         const val PROD_PAGE_URL = "https://elikasphilippines.herokuapp.com/"
+        const val CURRENT_URL = DEV_PAGE_URL
         const val MAX_PROGRESS = 100
+        private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
+        private const val TAG = "MainActivity"
     }
 
     /*override fun onBackPressed() {

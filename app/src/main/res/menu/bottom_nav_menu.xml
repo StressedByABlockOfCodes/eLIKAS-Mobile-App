@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/back"
-        android:icon="@drawable/ic_back_white_34dp"
+        android:icon="@drawable/ic_back_white_24dp"
         android:title="@string/title_back" />
 
     <item
