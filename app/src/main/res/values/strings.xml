@@ -64,5 +64,6 @@
     <string name="list">List of Residents</string>
     <string name="search_name">Search name</string>
     <string name="cancel">Cancel</string>
+    <string name="title_activity_offline_mode">Home</string>
 
 </resources>

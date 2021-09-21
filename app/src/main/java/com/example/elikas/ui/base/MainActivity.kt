@@ -448,7 +448,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val DEV_PAGE_URL = "http://192.168.1.9:8000/"
+        const val DEV_PAGE_URL = "http://192.168.1.8:8000/"
         const val PROD_PAGE_URL = "https://elikasphilippines.herokuapp.com/"
         const val CURRENT_URL = DEV_PAGE_URL
         const val MAX_PROGRESS = 100
