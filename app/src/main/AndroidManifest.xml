@@ -4,7 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -13,12 +15,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ELIKAS">
-        <meta-data android:name="android.webkit.WebView.MetricsOptOut"
-            android:value="true" />
         <activity
-            android:name=".SplashScreenActivity"
-            android:screenOrientation="portrait"
+            android:name=".ui.sms.OfflineModeActivity"
             android:exported="true"
+            android:label="@string/title_activity_offline_mode" />
+
+        <meta-data
+            android:name="android.webkit.WebView.MetricsOptOut"
+            android:value="true" />
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
+        <activity
+            android:name=".ui.base.SplashScreenActivity"
+            android:exported="true"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.ELIKAS.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,10 +38,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".ui.base.MainActivity"
+            android:fitsSystemWindows="true"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
-            android:fitsSystemWindows="true" />
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.error.NoPermissionsActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.error.NoInternetActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" /> <!-- for android 29+ -->
+        <service
+            android:name=".service.ForegroundOnlyLocationService"
+            android:enabled="true"
+            android:exported="false"
+            android:foregroundServiceType="location"></service>
     </application>
 
 </manifest>

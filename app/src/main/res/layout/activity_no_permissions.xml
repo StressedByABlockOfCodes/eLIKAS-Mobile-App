@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.error.NoPermissionsActivity"
+    android:padding="20dp">
+
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/btnEnableGPS"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="260dp"
+            android:contentDescription="@string/permission_rationale"
+            android:src="@drawable/ic_location_permission"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:ignore="ImageContrastCheck" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="@string/whoops"
+            android:textSize="42sp"
+            android:theme="@style/Widget.TextView.Bold" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp"
+            android:gravity="center"
+            android:lineSpacingExtra="24sp"
+            android:lineSpacingMultiplier="0"
+            android:text="@string/permission_rationale"
+            android:textSize="16sp"
+            android:theme="@style/Widget.TextView.Medium" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <Button
+        android:id="@+id/btnEnableGPS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnLocationAccess"
+        android:text="@string/gps_enable"
+        android:theme="@style/Widget.Button.Base" />
+
+    <Button
+        android:id="@+id/btnLocationAccess"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="28dp"
+        android:text="@string/location_enable"
+        android:theme="@style/Widget.Button.Base"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>

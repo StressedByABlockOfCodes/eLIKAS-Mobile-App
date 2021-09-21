@@ -1,10 +1,9 @@
-package com.example.elikas
+package com.example.elikas.ui.base
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.content.Intent
-
-
+import com.example.elikas.R
 
 
 class SplashScreenActivity : AppCompatActivity() {

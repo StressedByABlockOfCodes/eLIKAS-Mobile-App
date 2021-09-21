@@ -6,4 +6,7 @@
     <color name="colorSecondaryAccent">#FFB703</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="inactive">#DAE1EC</color>
+    <color name="background">#F4F7FC</color>
+    <color name="text">#2E3B52</color>
 </resources>
