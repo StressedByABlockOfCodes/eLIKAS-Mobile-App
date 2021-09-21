@@ -34,8 +34,8 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
-import com.example.elikas.MainActivity
-import com.example.elikas.MainActivity.Companion.CURRENT_URL
+import com.example.elikas.ui.base.MainActivity
+import com.example.elikas.ui.base.MainActivity.Companion.CURRENT_URL
 import com.example.elikas.R
 import com.example.elikas.utils.SharedPreferenceUtil
 import com.example.elikas.utils.VolleySingleton
@@ -283,6 +283,7 @@ class ForegroundOnlyLocationService : Service() {
             }
             val queue = VolleySingleton.getInstance(applicationContext).requestQueue
             queue.cancelAll(TAG)
+            //VolleySingleton.getInstance(applicationContext).requestQueue.cancelAll(TAG)
             //SharedPreferenceUtil.saveLocationTrackingPref(this, false)
         } catch (unlikely: SecurityException) {
             //SharedPreferenceUtil.saveLocationTrackingPref(this, true)

@@ -15,7 +15,7 @@
 */
 
 
-package com.example.elikas
+package com.example.elikas.ui.base
 
 import android.Manifest
 import android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -35,28 +35,25 @@ import android.util.Log
 import android.webkit.*
 
 import android.widget.Toast
-import java.net.MalformedURLException
 import androidx.core.app.ActivityCompat
 
 import android.content.pm.PackageManager
 import android.location.Location
-import android.net.Uri
 import android.os.IBinder
-import android.provider.Settings
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.example.elikas.BuildConfig.APPLICATION_ID
 import com.example.elikas.service.ForegroundOnlyLocationService
 import com.example.elikas.utils.toText
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
-import com.google.android.gms.tasks.Task
-import com.google.android.material.snackbar.Snackbar
 import android.location.LocationManager
-import android.view.WindowManager
+import com.example.elikas.R
+import com.example.elikas.ui.error.NoInternetActivity
+import com.example.elikas.ui.error.NoPermissionsActivity
+import com.example.elikas.utils.InternetConnectionUtil
 import com.example.elikas.utils.SharedPreferenceUtil
 
 
@@ -97,6 +94,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //Check first if there's internet connection
+        //this is a temporary solution, will change to network listener in the future
+        if(InternetConnectionUtil.isNetworkAvailable(this)) {
+            startActivity(Intent(this, NoInternetActivity::class.java))
+            finish()
+        }
+
         foregroundOnlyBroadcastReceiver = ForegroundOnlyBroadcastReceiver()
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         //sharedPreferences = getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
@@ -130,6 +134,11 @@ class MainActivity : AppCompatActivity() {
             }
             false
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding = null
     }
 
     override fun onStart() {
@@ -270,13 +279,14 @@ class MainActivity : AppCompatActivity() {
 
     private fun startLocationPermissionRequest() {
         ActivityCompat.requestPermissions(this, arrayOf(ACCESS_FINE_LOCATION),
-            REQUEST_PERMISSIONS_REQUEST_CODE)
+            REQUEST_PERMISSIONS_REQUEST_CODE
+        )
     }
 
     private fun requestPermissions() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_FINE_LOCATION)) {
             Log.i(TAG, "Displaying permission rationale to provide additional context.")
-            startActivity(Intent(this, LocationPermissionActivity::class.java))
+            startActivity(Intent(this, NoPermissionsActivity::class.java))
             finish()
             /*Snackbar.make(findViewById(R.id.activity_main), R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.ok) {
@@ -304,7 +314,7 @@ class MainActivity : AppCompatActivity() {
                 }
                 else -> {
                     // Permission denied.
-                    startActivity(Intent(this, LocationPermissionActivity::class.java))
+                    startActivity(Intent(this, NoPermissionsActivity::class.java))
                     finish()
                     /*Snackbar.make(findViewById(R.id.activity_main), R.string.permission_denied_explanation, Snackbar.LENGTH_INDEFINITE)
                         .setAction(R.string.settings) {
@@ -381,7 +391,7 @@ class MainActivity : AppCompatActivity() {
                 Activity.RESULT_CANCELED -> {
                     Log.i("Status: ","Off")
                     Toast.makeText(applicationContext, "GPS NOT ENABLED", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, LocationPermissionActivity::class.java))
+                    startActivity(Intent(this, NoPermissionsActivity::class.java))
                     finish()
                 }
                 else -> {

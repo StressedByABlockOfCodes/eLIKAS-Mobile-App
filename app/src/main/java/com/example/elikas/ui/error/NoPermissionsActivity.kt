@@ -1,4 +1,4 @@
-package com.example.elikas
+package com.example.elikas.ui.error
 
 import android.Manifest
 import android.app.Activity
@@ -18,7 +18,8 @@ import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import com.example.elikas.BuildConfig.APPLICATION_ID
-import com.example.elikas.databinding.ActivityLocationPermissionBinding
+import com.example.elikas.databinding.ActivityNoPermissionsBinding
+import com.example.elikas.ui.base.MainActivity
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationRequest
@@ -26,16 +27,16 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
 
-class LocationPermissionActivity : AppCompatActivity() {
+class NoPermissionsActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityLocationPermissionBinding
+    private lateinit var binding: ActivityNoPermissionsBinding
     private lateinit var locationManager: LocationManager
     private lateinit var launcher: ActivityResultLauncher<IntentSenderRequest>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //setContentView(R.layout.activity_location_permission)
-        binding = ActivityLocationPermissionBinding.inflate(layoutInflater)
+        //setContentView(R.layout.activity_no_permissions)
+        binding = ActivityNoPermissionsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager

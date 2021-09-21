@@ -9,14 +9,50 @@
         <item name="android:windowFullscreen">true</item>
     </style>
 
+    <!--TextStyles-->
+    <style name="Widget.TextView.Normal" parent="ThemeOverlay.AppCompat">
+        <item name="android:fontFamily">@font/poppins</item>
+        <item name="android:textColor">@color/text</item>
+    </style>
+    <style name="Widget.TextView.Medium" parent="ThemeOverlay.AppCompat">
+        <item name="android:fontFamily">@font/poppins_medium</item>
+        <item name="android:textColor">@color/text</item>
+    </style>
+    <style name="Widget.TextView.SemiBold" parent="ThemeOverlay.AppCompat">
+        <item name="android:fontFamily">@font/poppins_semibold</item>
+        <item name="android:textColor">@color/text</item>
+    </style>
     <style name="Widget.TextView.Bold" parent="ThemeOverlay.AppCompat">
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:fontFamily">@font/poppins_bold</item>
+        <item name="android:textColor">@color/text</item>
     </style>
 
+    <style name="Widget.TextView.Headings1" parent="Widget.TextView.Bold">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+    <style name="Widget.TextView.Headings2" parent="Widget.TextView.Normal">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAlignment">center</item>
+    </style>
+
+    <!--ButtonStyles-->
     <style name="Widget.Button.Base" parent="ThemeOverlay.AppCompat">
-        <item name="android:padding">12dp</item>
+        <item name="android:fontFamily">@font/poppins_semibold</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:padding">9dp</item>
         <item name="android:backgroundTint">@color/colorPrimaryAccent</item>
+    </style>
+
+    <style name="Widget.LinearLayout.OfflineMode" parent="ThemeOverlay.AppCompat">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">96dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:gravity">center</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@drawable/border</item>
     </style>
 
 </resources>
