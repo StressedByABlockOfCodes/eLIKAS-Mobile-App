@@ -53,7 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/btnLocationAccess"
         android:text="@string/gps_enable"
-        android:theme="@style/Widget.Button.Base" />
+        android:theme="@style/Widget.Button.PrimaryAccent" />
 
     <Button
         android:id="@+id/btnLocationAccess"
@@ -61,7 +61,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="28dp"
         android:text="@string/location_enable"
-        android:theme="@style/Widget.Button.Base"
+        android:theme="@style/Widget.Button.PrimaryAccent"
         android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

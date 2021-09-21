@@ -43,7 +43,21 @@
         <item name="android:textSize">20sp</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:padding">9dp</item>
+    </style>
+
+    <style name="Widget.Button.PrimaryAccent" parent="Widget.Button.Base">
         <item name="android:backgroundTint">@color/colorPrimaryAccent</item>
+    </style>
+
+    <style name="Widget.Button.Secondary" parent="Widget.Button.Base">
+        <item name="android:backgroundTint">@color/colorSecondary</item>
+    </style>
+
+    <style name="Widget.Button.SecondaryOutlined" parent="Widget.Button.Base">
+        <item name="android:textColor">#CCCCCC</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="strokeColor">@color/background</item>
+        <item name="strokeWidth">2dp</item>
     </style>
 
     <style name="Widget.LinearLayout.OfflineMode" parent="ThemeOverlay.AppCompat">

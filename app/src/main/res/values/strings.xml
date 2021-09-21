@@ -63,5 +63,6 @@
     </string>
     <string name="list">List of Residents</string>
     <string name="search_name">Search name</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

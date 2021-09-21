@@ -1,209 +1,216 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.sms.fragment.home.HomeFragment"
-    android:orientation="vertical"
+    android:scrollbars="none"
     android:padding="20dp">
 
     <LinearLayout
-        android:id="@+id/linearlayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="34dp"
-        android:baselineAligned="false"
-        android:orientation="horizontal"
-        android:weightSum="2">
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:id="@+id/linearlayout1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:orientation="vertical">
+            android:layout_marginTop="15dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:weightSum="2">
 
-            <TextView
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="@string/evacuation_center"
-                android:theme="@style/Widget.TextView.Bold"
-                android:textSize="14sp"/>
+                android:layout_gravity="center"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/evacuation_center"
+                    android:theme="@style/Widget.TextView.Bold"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/evacuation_center_addr"
+                    android:theme="@style/Widget.TextView.Normal"
+                    android:textSize="14sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="@string/evacuation_center_addr"
-                android:theme="@style/Widget.TextView.Normal"
-                android:textSize="14sp"/>
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/total_capacity_dummy"
+                    android:textSize="50sp"
+                    android:textAlignment="viewEnd"
+                    android:theme="@style/Widget.TextView.Bold"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/total_capacity"
+                    android:textAllCaps="true"
+                    android:theme="@style/Widget.TextView.Normal"
+                    android:textSize="14sp"
+                    android:textAlignment="viewEnd"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/textview"
+            android:layout_width="match_parent"
+            android:layout_height="93dp"
+            android:layout_marginTop="34dp"
+            android:background="@drawable/bg_offline_message"
+            android:text="@string/offline_message"
+            android:theme="@style/Widget.TextView.Normal" />
+
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_weight="1"
+            android:id="@+id/linearlayout2"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginTop="47dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:weightSum="3">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/total_capacity_dummy"
-                android:textSize="50sp"
-                android:textAlignment="viewEnd"
-                android:theme="@style/Widget.TextView.Bold"/>
+            <LinearLayout
+                android:id="@+id/admit"
+                style="@style/Widget.LinearLayout.OfflineMode">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/total_capacity"
-                android:textAllCaps="true"
-                android:theme="@style/Widget.TextView.Normal"
-                android:textSize="14sp"
-                android:textAlignment="viewEnd"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/admit"
+                    android:theme="@style/Widget.TextView.Headings1" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/evacuees"
+                    android:theme="@style/Widget.TextView.Headings2" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/discharge"
+                style="@style/Widget.LinearLayout.OfflineMode">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/discharge"
+                    android:theme="@style/Widget.TextView.Headings1" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/evacuees"
+                    android:theme="@style/Widget.TextView.Headings2" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/view_evacuees"
+                style="@style/Widget.LinearLayout.OfflineMode">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/view"
+                    android:theme="@style/Widget.TextView.Headings1" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/evacuees"
+                    android:theme="@style/Widget.TextView.Headings2" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearlayout3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="60dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <LinearLayout
+                android:id="@+id/dispense"
+                style="@style/Widget.LinearLayout.OfflineMode">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/dispense"
+                    android:theme="@style/Widget.TextView.Headings1" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/supply"
+                    android:theme="@style/Widget.TextView.Headings2" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/request"
+                style="@style/Widget.LinearLayout.OfflineMode">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/request"
+                    android:theme="@style/Widget.TextView.Headings1" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/supply"
+                    android:theme="@style/Widget.TextView.Headings2" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/view_supply"
+                style="@style/Widget.LinearLayout.OfflineMode">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/view"
+                    android:theme="@style/Widget.TextView.Headings1" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/supply"
+                    android:theme="@style/Widget.TextView.Headings2" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/textview"
-        android:layout_width="match_parent"
-        android:layout_height="93dp"
-        android:layout_marginTop="34dp"
-        android:background="@drawable/bg_offline_message"
-        android:text="@string/offline_message"
-        android:theme="@style/Widget.TextView.Normal" />
-
-    <LinearLayout
-        android:id="@+id/linearlayout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="47dp"
-        android:baselineAligned="false"
-        android:orientation="horizontal"
-        android:weightSum="3">
-
-        <LinearLayout
-            android:id="@+id/admit"
-            style="@style/Widget.LinearLayout.OfflineMode">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/admit"
-                android:theme="@style/Widget.TextView.Headings1" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/evacuees"
-                android:theme="@style/Widget.TextView.Headings2" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/discharge"
-            style="@style/Widget.LinearLayout.OfflineMode">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/discharge"
-                android:theme="@style/Widget.TextView.Headings1" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/evacuees"
-                android:theme="@style/Widget.TextView.Headings2" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/view_evacuees"
-            style="@style/Widget.LinearLayout.OfflineMode">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/view"
-                android:theme="@style/Widget.TextView.Headings1" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/evacuees"
-                android:theme="@style/Widget.TextView.Headings2" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearlayout3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
-        android:baselineAligned="false"
-        android:orientation="horizontal"
-        android:weightSum="3">
-
-        <LinearLayout
-            android:id="@+id/dispense"
-            style="@style/Widget.LinearLayout.OfflineMode">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/dispense"
-                android:theme="@style/Widget.TextView.Headings1" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/supply"
-                android:theme="@style/Widget.TextView.Headings2" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/request"
-            style="@style/Widget.LinearLayout.OfflineMode">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/request"
-                android:theme="@style/Widget.TextView.Headings1" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/supply"
-                android:theme="@style/Widget.TextView.Headings2" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/view_supply"
-            style="@style/Widget.LinearLayout.OfflineMode">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/view"
-                android:theme="@style/Widget.TextView.Headings1" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/supply"
-                android:theme="@style/Widget.TextView.Headings2" />
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-</LinearLayout>
+</ScrollView>
