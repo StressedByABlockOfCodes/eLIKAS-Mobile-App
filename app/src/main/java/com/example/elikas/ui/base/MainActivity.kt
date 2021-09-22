@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity() {
 
         //Check first if there's internet connection
         //this is a temporary solution, will change to network listener in the future
-        if(InternetConnectionUtil.isNetworkAvailable(this)) {
+        if(!InternetConnectionUtil.isNetworkAvailable(this)) {
             startActivity(Intent(this, NoInternetActivity::class.java))
             finish()
         }

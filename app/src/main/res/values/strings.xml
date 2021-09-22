@@ -64,6 +64,13 @@
     <string name="list">List of Residents</string>
     <string name="search_name">Search name</string>
     <string name="cancel">Cancel</string>
+    <string name="dispense_supply">Dispense Supply</string>
+    <string name="disaster_response">Disaster Response</string>
+    <string name="relief_recipient">Relief Recipient</string>
+    <string name="Select">Select</string>
+    <string name="supply_type">Supply Type</string>
+    <string name="quantity">Quantity</string>
+
     <string name="title_activity_offline_mode">Home</string>
 
 </resources>

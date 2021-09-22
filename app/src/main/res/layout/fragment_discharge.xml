@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="19dp"
+        android:text="@string/list"
+        android:textSize="20sp"
+        android:layout_alignParentTop="true"
+        android:theme="@style/Widget.TextView.SemiBold" />
+
+    <EditText
+        android:id="@+id/txtViewSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_rounded_rectangle"
+        android:drawableEnd="@drawable/ic_search_24dp"
+        android:hint="@string/search_name"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:minHeight="48dp"
+        tools:ignore="TextContrastCheck"
+        android:layout_below="@+id/textview"/>
+
+    <ListView
+        android:id="@+id/listview_residents"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
+        android:layout_above="@+id/btnAdmit"
+        android:layout_below="@+id/txtViewSearch"/>
+
+    <Button
+        android:id="@+id/btnAdmit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btnCancel"
+        android:layout_marginTop="94dp"
+        android:text="@string/discharge"
+        android:theme="@style/Widget.Button.Secondary" />
+
+    <Button
+        android:id="@+id/btnCancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/cancel"
+        style="@style/Widget.Button.SecondaryOutlined"/>
+
+</RelativeLayout>
