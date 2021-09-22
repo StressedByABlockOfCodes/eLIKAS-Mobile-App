@@ -3,6 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Fornaleza/AndroidStudioProjects/elikasApp/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Users/Fornaleza/AndroidStudioProjects/elikasApp/app/src/main/res/layout/activity_no_permissions.xml" value="0.1" />
+        <entry key="..\:/Users/Fornaleza/AndroidStudioProjects/elikasApp/app/src/main/res/layout/activity_offline_mode.xml" value="0.1" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.21388888888888888" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/drawable/bg_gradient.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/drawable/bg_offline_message.xml" value="0.165234375" />
