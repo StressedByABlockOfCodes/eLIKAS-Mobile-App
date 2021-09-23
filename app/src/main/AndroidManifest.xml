@@ -15,6 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ELIKAS">
+        
         <activity
             android:name=".ui.sms.OfflineModeActivity"
             android:exported="true"
@@ -55,7 +56,7 @@
             android:name=".service.ForegroundOnlyLocationService"
             android:enabled="true"
             android:exported="false"
-            android:foregroundServiceType="location"></service>
+            android:foregroundServiceType="location" />
     </application>
 
 </manifest>
