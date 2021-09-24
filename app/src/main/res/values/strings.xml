@@ -65,11 +65,29 @@
     <string name="search_name">Search name</string>
     <string name="cancel">Cancel</string>
     <string name="dispense_supply">Dispense Supply</string>
+    <string name="request_supply">Request Supply</string>
     <string name="disaster_response">Disaster Response</string>
     <string name="relief_recipient">Relief Recipient</string>
     <string name="Select">Select</string>
     <string name="supply_type">Supply Type</string>
     <string name="quantity">Quantity</string>
+
+    <string name="food_packs">Food Packs</string>
+    <string name="water">Water</string>
+    <string name="clothes">Clothes</string>
+    <string name="hygiene_kit">Hygiene Kit</string>
+    <string name="medicine">Medicine</string>
+    <string name="esa">Emergency Shelter Assistance</string>
+    <string name="add">Increase the quantity</string>
+    <string name="minus">Decrease the quantity</string>
+    <string name="note">Note</string>
+
+    <string name="barangay">Barangay:</string>
+    <string name="total_residents">Total Residents</string>
+    <string name="add_supply">Add Supply</string>
+    <string name="source">Source</string>
+    <string name="enter_source">Enter Source</string>
+    <string name="text_add">Add</string>
 
     <string name="title_activity_offline_mode">Home</string>
 

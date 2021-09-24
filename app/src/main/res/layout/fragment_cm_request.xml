@@ -17,40 +17,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="19dp"
-            android:text="@string/dispense_supply"
+            android:text="@string/request_supply"
             android:textSize="20sp"
             android:theme="@style/Widget.TextView.SemiBold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="@string/disaster_response"
-            android:textSize="14sp"
-            android:theme="@style/Widget.TextView.Normal" />
-
-        <Spinner
-            android:id="@+id/spinner_dr"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="48dp"
-            tools:ignore="SpeakableTextPresentCheck" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:layout_marginBottom="8dp"
-            android:text="@string/relief_recipient"
-            android:textSize="14sp"
-            android:theme="@style/Widget.TextView.Normal" />
-
-        <Spinner
-            android:id="@+id/spinner_rr"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="48dp"
-            tools:ignore="SpeakableTextPresentCheck" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -424,22 +393,42 @@
 
         </LinearLayout>
 
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="151dp"
+            android:layout_marginTop="60dp"
+            android:layout_marginBottom="60dp"
+            android:gravity="start"
+            android:hint="@string/note"
+            android:background="@drawable/bg_offline_message"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            tools:ignore="SpeakableTextPresentCheck" />
 
-        <Button
-            android:id="@+id/btnAdmit"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="43dp"
-            android:text="@string/dispense"
-            android:theme="@style/Widget.Button.Secondary" />
+            android:weightSum="2"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btnCancel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="19dp"
-            android:text="@string/cancel"
-            style="@style/Widget.Button.SecondaryOutlined"/>
+            <Button
+                android:id="@+id/btnCancel"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                style="@style/Widget.Button.SecondaryOutlined"/>
+
+            <Button
+                android:id="@+id/btnAdmit"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="@string/request"
+                android:layout_marginStart="18dp"
+                style="@style/Widget.Button.Secondary"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

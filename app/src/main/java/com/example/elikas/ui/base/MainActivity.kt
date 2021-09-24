@@ -50,6 +50,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import android.location.LocationManager
+import android.net.Uri
 import com.example.elikas.R
 import com.example.elikas.ui.error.NoInternetActivity
 import com.example.elikas.ui.error.NoPermissionsActivity
@@ -65,6 +66,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var webView: WebView
     private lateinit var userID: String
     private lateinit var launcher: ActivityResultLauncher<IntentSenderRequest>
+    private lateinit var filechooserLauncher: ActivityResultLauncher<Intent>
 
     private lateinit var locationManager: LocationManager
     private var foregroundOnlyLocationServiceBound = false
@@ -87,6 +89,9 @@ class MainActivity : AppCompatActivity() {
             foregroundOnlyLocationServiceBound = false
         }
     }
+
+    private var mUploadMessage: ValueCallback<Uri>? = null
+    private var uploadMessage: ValueCallback<Array<Uri>>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,6 +121,7 @@ class MainActivity : AppCompatActivity() {
         initWebView()
         pullUpToRefresh()
         onActivityResult()
+        onFileChooserResult()
         bottomNavView.setOnItemSelectedListener { menuItem ->
             when(menuItem.itemId){
                 R.id.back -> {
@@ -183,6 +189,8 @@ class MainActivity : AppCompatActivity() {
         webView.settings.useWideViewPort = true             // Enable responsive layout
         webView.settings.loadWithOverviewMode = true        // Zoom out if the content width is greater than the width of the viewport
         webView.settings.domStorageEnabled = true
+        webView.settings.allowFileAccess = true
+        webView.settings.allowContentAccess = true
         webView.addJavascriptInterface(WebAppInterface(this), "Android")
 
         webView.loadUrl(CURRENT_URL + "home")
@@ -269,7 +277,40 @@ class MainActivity : AppCompatActivity() {
                 progressBar.visibility = View.GONE
             }
         }
+
+        override fun onShowFileChooser(webView: WebView?, filePathCallback: ValueCallback<Array<Uri>>?, fileChooserParams: FileChooserParams?): Boolean {
+            uploadMessage?.onReceiveValue(null)
+            uploadMessage = null
+
+            uploadMessage = filePathCallback
+
+            val intent = fileChooserParams!!.createIntent()
+            try {
+                intent.type = "image/*"
+                filechooserLauncher.launch(intent)
+                //startActivityForResult(intent, REQUEST_SELECT_FILE)
+            } catch (e: ActivityNotFoundException) {
+                uploadMessage = null
+                Toast.makeText(applicationContext, "Cannot Open File Chooser", Toast.LENGTH_LONG).show()
+                return false
+            }
+            return true
+        }
     }
+
+    //This is a DEPRECATED method
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_SELECT_FILE) {
+            if (uploadMessage == null)
+                return
+            var results: Array<Uri>? = WebChromeClient.FileChooserParams.parseResult(resultCode, data)
+            uploadMessage?.onReceiveValue(results)
+            uploadMessage = null
+        }
+        else
+            Toast.makeText(applicationContext, "Failed to Upload Image", Toast.LENGTH_LONG).show()
+    }*/
 
     private fun checkPermissions(): Boolean {
         return PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this,
@@ -338,8 +379,7 @@ class MainActivity : AppCompatActivity() {
         val locationRequest = LocationRequest.create()
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-        val result = LocationServices.getSettingsClient(this)
-            .checkLocationSettings(builder.build())
+        val result = LocationServices.getSettingsClient(this).checkLocationSettings(builder.build())
 
         result.addOnCompleteListener { task ->
             try {
@@ -400,6 +440,30 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun onFileChooserResult() {
+        filechooserLauncher = this.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            when (result.resultCode) {
+                Activity.RESULT_OK -> {
+                    if (uploadMessage != null) {
+                        val results: Array<Uri>? = WebChromeClient.FileChooserParams.parseResult(result.resultCode, result.data)
+                        uploadMessage?.onReceiveValue(results)
+                        uploadMessage = null
+                    }
+                }
+                Activity.RESULT_CANCELED -> {
+                    //Toast.makeText(applicationContext, "Cancelled", Toast.LENGTH_LONG).show()
+                    uploadMessage?.onReceiveValue(null)
+                    uploadMessage = null
+                }
+                else -> {
+                    Toast.makeText(applicationContext, "Failed to Upload Image", Toast.LENGTH_LONG).show()
+                    uploadMessage?.onReceiveValue(null)
+                    uploadMessage = null
+                }
+            }
+        }
+    }
+
     /**
      * Receiver for location broadcasts from [ForegroundOnlyLocationService].
      */
@@ -453,6 +517,7 @@ class MainActivity : AppCompatActivity() {
         const val CURRENT_URL = DEV_PAGE_URL
         const val MAX_PROGRESS = 100
         private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
+        const val REQUEST_SELECT_FILE = 120
         private const val TAG = "MainActivity"
     }
 

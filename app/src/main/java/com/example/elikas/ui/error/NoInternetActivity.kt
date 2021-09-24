@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import com.example.elikas.R
+import com.example.elikas.ui.sms.OfflineModeActivity
 
 class NoInternetActivity : AppCompatActivity() {
 
@@ -14,7 +15,7 @@ class NoInternetActivity : AppCompatActivity() {
 
         val btnOffline: Button = findViewById(R.id.btnSendDataOffline)
         btnOffline.setOnClickListener {
-            startActivity(Intent(this, NoInternetActivity::class.java))
+            startActivity(Intent(this, OfflineModeActivity::class.java))
             finish()
         }
     }
