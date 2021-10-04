@@ -45,16 +45,21 @@
             android:textSize="14sp"
             android:theme="@style/Widget.TextView.Normal" />
 
-        <Spinner
-            android:id="@+id/spinner_rr"
+        <EditText
+            android:id="@+id/txtFamilyRep"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:hint="@string/family_rep"
+            style="@style/Widget.TextView.Normal"
+            android:background="@drawable/bg_offline_message"
             android:minHeight="48dp"
-            tools:ignore="SpeakableTextPresentCheck" />
+            android:importantForAutofill="no"
+            android:inputType="textPersonName" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp">
 
             <TextView
                 android:id="@+id/txtSupplyType"
@@ -115,16 +120,16 @@
 
                 <EditText
                     android:id="@+id/edText_FoodPacks"
+                    style="@style/Widget.TextView.Normal"
                     android:layout_width="30dp"
                     android:layout_height="25dp"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_gravity="center_vertical"
                     android:background="@drawable/bg_offline_message"
-                    android:hint="@string/food_packs"
                     android:importantForAutofill="no"
                     android:inputType="number"
-                    tools:ignore="LabelFor,TouchTargetSizeCheck,DuplicateSpeakableTextCheck" />
+                    tools:ignore="LabelFor,TouchTargetSizeCheck,DuplicateSpeakableTextCheck,SpeakableTextPresentCheck" />
 
                 <ImageView
                     android:id="@+id/btnAdd_FoodPacks"
@@ -173,16 +178,16 @@
 
                 <EditText
                     android:id="@+id/edText_Water"
+                    style="@style/Widget.TextView.Normal"
                     android:layout_width="30dp"
                     android:layout_height="25dp"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_gravity="center_vertical"
                     android:background="@drawable/bg_offline_message"
-                    android:hint="@string/food_packs"
                     android:importantForAutofill="no"
                     android:inputType="number"
-                    tools:ignore="LabelFor,TouchTargetSizeCheck,DuplicateSpeakableTextCheck" />
+                    tools:ignore="LabelFor,TouchTargetSizeCheck,DuplicateSpeakableTextCheck,SpeakableTextPresentCheck" />
 
                 <ImageView
                     android:id="@+id/btnAddWater"
@@ -230,16 +235,16 @@
 
                 <EditText
                     android:id="@+id/edText_Clothes"
+                    style="@style/Widget.TextView.Normal"
                     android:layout_width="30dp"
                     android:layout_height="25dp"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_gravity="center_vertical"
                     android:background="@drawable/bg_offline_message"
-                    android:hint="@string/food_packs"
                     android:importantForAutofill="no"
                     android:inputType="number"
-                    tools:ignore="LabelFor,TouchTargetSizeCheck,DuplicateSpeakableTextCheck" />
+                    tools:ignore="LabelFor,TouchTargetSizeCheck,DuplicateSpeakableTextCheck,SpeakableTextPresentCheck" />
 
                 <ImageView
                     android:id="@+id/btnAdd_Clothes"
@@ -287,16 +292,16 @@
 
                 <EditText
                     android:id="@+id/edText_HygieneKit"
+                    style="@style/Widget.TextView.Normal"
                     android:layout_width="30dp"
                     android:layout_height="25dp"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_gravity="center_vertical"
                     android:background="@drawable/bg_offline_message"
-                    android:hint="@string/food_packs"
                     android:importantForAutofill="no"
                     android:inputType="number"
-                    tools:ignore="LabelFor,TouchTargetSizeCheck,DuplicateSpeakableTextCheck" />
+                    tools:ignore="LabelFor,TouchTargetSizeCheck,DuplicateSpeakableTextCheck,SpeakableTextPresentCheck" />
 
                 <ImageView
                     android:id="@+id/btnAdd_HygieneKit"
@@ -344,16 +349,16 @@
 
                 <EditText
                     android:id="@+id/edText_Medicine"
+                    style="@style/Widget.TextView.Normal"
                     android:layout_width="30dp"
                     android:layout_height="25dp"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_gravity="center_vertical"
                     android:background="@drawable/bg_offline_message"
-                    android:hint="@string/food_packs"
                     android:importantForAutofill="no"
                     android:inputType="number"
-                    tools:ignore="LabelFor,TouchTargetSizeCheck,DuplicateSpeakableTextCheck" />
+                    tools:ignore="LabelFor,TouchTargetSizeCheck,DuplicateSpeakableTextCheck,SpeakableTextPresentCheck" />
 
                 <ImageView
                     android:id="@+id/btnAdd_Medicine"
@@ -401,16 +406,16 @@
 
                 <EditText
                     android:id="@+id/edText_ESA"
+                    style="@style/Widget.TextView.Normal"
                     android:layout_width="30dp"
                     android:layout_height="25dp"
+                    android:layout_gravity="center_vertical"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:layout_gravity="center_vertical"
                     android:background="@drawable/bg_offline_message"
-                    android:hint="@string/food_packs"
                     android:importantForAutofill="no"
                     android:inputType="number"
-                    tools:ignore="LabelFor,TouchTargetSizeCheck,DuplicateSpeakableTextCheck" />
+                    tools:ignore="LabelFor,TouchTargetSizeCheck,DuplicateSpeakableTextCheck,SpeakableTextPresentCheck" />
 
                 <ImageView
                     android:id="@+id/btnAdd_ESA"

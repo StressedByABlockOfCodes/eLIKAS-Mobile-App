@@ -9,11 +9,73 @@
         android:id="@+id/navigation_home"
         android:name="com.example.elikas.ui.sms.fragment.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_cm_home" />
+        tools:layout="@layout/fragment_cm_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_CMAdmitFragment2"
+            app:destination="@id/CMAdmitFragment"
+            app:popUpTo="@+id/navigation_home"/>
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_profile2"
+            app:destination="@id/navigation_profile" />
+        <action
+            android:id="@+id/action_navigation_home_to_BCAddFragment"
+            app:destination="@id/BCAddFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_CMDischargeFragment"
+            app:destination="@id/CMDischargeFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_CMDispenseFragment"
+            app:destination="@id/CMDispenseFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_CMRequestFragment"
+            app:destination="@id/CMRequestFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_BCDispenseFragment"
+            app:destination="@id/BCDispenseFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_viewSMSFragment"
+            app:destination="@id/viewSMSFragment" />
+
+    </fragment>
     <fragment
         android:id="@+id/navigation_profile"
         android:name="com.example.elikas.ui.sms.fragment.profile.ProfileFragment"
         android:label="@string/title_profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/CMAdmitFragment"
+        android:name="com.example.elikas.ui.sms.fragment.CampManager.CMAdmitFragment"
+        android:label="Admit"
+        tools:layout="@layout/fragment_cm_admit"/>
+    <fragment
+        android:id="@+id/BCAddFragment"
+        android:name="com.example.elikas.ui.sms.fragment.BarangayCaptain.BCAddFragment"
+        android:label="Add"
+        tools:layout="@layout/fragment_bc_add_supply" />
+    <fragment
+        android:id="@+id/CMDischargeFragment"
+        android:name="com.example.elikas.ui.sms.fragment.CampManager.CMDischargeFragment"
+        android:label="Discharge"
+        tools:layout="@layout/fragment_cm_discharge" />
+    <fragment
+        android:id="@+id/CMDispenseFragment"
+        android:name="com.example.elikas.ui.sms.fragment.CampManager.CMDispenseFragment"
+        android:label="Dispense"
+        tools:layout="@layout/fragment_dispense"/>
+    <fragment
+        android:id="@+id/CMRequestFragment"
+        android:name="com.example.elikas.ui.sms.fragment.CampManager.CMRequestFragment"
+        android:label="Request"
+        tools:layout="@layout/fragment_cm_request"/>
+    <fragment
+        android:id="@+id/BCDispenseFragment"
+        android:name="com.example.elikas.ui.sms.fragment.BarangayCaptain.BCDispenseFragment"
+        android:label="Dispense"
+        tools:layout="@layout/fragment_dispense"/>
+    <fragment
+        android:id="@+id/viewSMSFragment"
+        android:name="com.example.elikas.ui.sms.fragment.ViewSMSFragment"
+        android:label="View"
+        tools:layout="@layout/fragment_view_sms"/>
 
 </navigation>

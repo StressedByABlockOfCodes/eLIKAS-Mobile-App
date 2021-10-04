@@ -88,6 +88,27 @@
     <string name="source">Source</string>
     <string name="enter_source">Enter Source</string>
     <string name="text_add">Add</string>
+    <string name="non_evacuees">non-evacuees</string>
+    <string name="family_rep">Family Representative</string>
+
+    <string name="dummy_sms">
+        September 20, 2021, 8:45 am <br/>
+        Del Rosario Barangay Hall Evacuees Record <br/>
+        <br/>
+        Total Evacuees: 89 <br/>
+        Female: 40 <br/>
+        Male: 49 <br/>
+        <br/>
+        Sectoral Classification Breakdown: <br/>
+        Children: <br/>
+        Lactating: <br/>
+        Pregnant: <br/>
+        PWD: <br/>
+        Senior Citizen: <br/>
+        Solo Parent: <br/>
+        <br/>
+        -eLIKAS
+    </string>
 
     <string name="title_activity_offline_mode">Home</string>
 

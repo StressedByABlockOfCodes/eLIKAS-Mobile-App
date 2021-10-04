@@ -1,4 +1,4 @@
-package com.example.elikas.utils
+package com.example.elikas.networking
 
 import android.content.Context
 import com.android.volley.Request

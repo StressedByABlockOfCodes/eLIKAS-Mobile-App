@@ -51,6 +51,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_offline_message"
             android:importantForAutofill="no"
+            style="@style/Widget.TextView.Normal"
             android:inputType="text"
             android:minHeight="48dp"
             tools:ignore="LabelFor,SpeakableTextPresentCheck" />
@@ -70,6 +71,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_offline_message"
             android:minHeight="48dp"
+            style="@style/Widget.TextView.Normal"
             android:hint="@string/enter_source"
             tools:ignore="LabelFor,SpeakableTextPresentCheck"
             android:inputType="text"

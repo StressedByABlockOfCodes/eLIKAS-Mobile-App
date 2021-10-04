@@ -33,7 +33,7 @@
     </style>
     <style name="Widget.TextView.Headings2" parent="Widget.TextView.Normal">
         <item name="android:textAllCaps">true</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">11sp</item>
         <item name="android:textAlignment">center</item>
     </style>
 

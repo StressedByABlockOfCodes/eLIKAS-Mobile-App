@@ -35,10 +35,10 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.example.elikas.ui.base.MainActivity
-import com.example.elikas.ui.base.MainActivity.Companion.CURRENT_URL
 import com.example.elikas.R
 import com.example.elikas.utils.SharedPreferenceUtil
-import com.example.elikas.utils.VolleySingleton
+import com.example.elikas.networking.VolleySingleton
+import com.example.elikas.utils.Constants.LOCATION_POST_URL
 import com.example.elikas.utils.toText
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -132,7 +132,6 @@ class ForegroundOnlyLocationService : Service() {
                 // things a bit and just saving it as a local variable, as we only need it again
                 // if a Notification is created (when the user navigates away from app).
                 currentLocation = locationResult.lastLocation
-                //TODO: Create the post request here and send currentLocation to API
 
                 volleyPostRequest(userid)
 
@@ -171,7 +170,7 @@ class ForegroundOnlyLocationService : Service() {
             e.printStackTrace()
         }
         val jsonObjectRequest = JsonObjectRequest(
-            Request.Method.POST, url, postData,
+            Request.Method.POST, LOCATION_POST_URL, postData,
             Response.Listener { response ->
                 val res = response.toString()
                 Log.i("Volley POST: ", res)
@@ -377,7 +376,6 @@ class ForegroundOnlyLocationService : Service() {
     }
 
     companion object {
-        private const val url = CURRENT_URL + "api/update/location"
         private const val TAG = "ForegroundOnlyLocationService"
         private const val PACKAGE_NAME = "com.example.elikas"
         private const val VOLLEY_REQ = "$PACKAGE_NAME.VOLLEY_REQUEST"

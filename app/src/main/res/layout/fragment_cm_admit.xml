@@ -19,24 +19,26 @@
 
     <EditText
         android:id="@+id/txtViewSearch"
+        style="@style/Widget.TextView.Normal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/textview"
         android:background="@drawable/bg_rounded_rectangle"
         android:drawableEnd="@drawable/ic_search_24dp"
         android:hint="@string/search_name"
         android:importantForAutofill="no"
         android:inputType="text"
         android:minHeight="48dp"
-        tools:ignore="TextContrastCheck"
-        android:layout_below="@+id/textview"/>
+        tools:ignore="TextContrastCheck" />
 
-    <ListView
-        android:id="@+id/listview_residents"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewResidents"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
         android:layout_above="@+id/btnAdmit"
-        android:layout_below="@+id/txtViewSearch"/>
+        android:layout_below="@+id/txtViewSearch"
+        android:layout_marginTop="26dp"
+        app:layoutManager="LinearLayoutManager" />
 
     <Button
         android:id="@+id/btnAdmit"

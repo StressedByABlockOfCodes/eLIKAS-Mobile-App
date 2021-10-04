@@ -51,11 +51,30 @@ import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import android.location.LocationManager
 import android.net.Uri
+import com.android.volley.Request
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonArrayRequest
+import com.android.volley.toolbox.JsonObjectRequest
 import com.example.elikas.R
 import com.example.elikas.ui.error.NoInternetActivity
 import com.example.elikas.ui.error.NoPermissionsActivity
 import com.example.elikas.utils.InternetConnectionUtil
 import com.example.elikas.utils.SharedPreferenceUtil
+import com.example.elikas.data.Residents
+import com.example.elikas.data.ResidentsResponseList
+import com.example.elikas.networking.GsonRequest
+import com.example.elikas.networking.VolleySingleton
+import com.example.elikas.utils.Constants
+import com.example.elikas.utils.Constants.CURRENT_URL
+import com.example.elikas.utils.Constants.RESIDENTS_GET_URL
+import org.json.JSONObject
+import com.google.gson.reflect.TypeToken
+
+
+
+
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -120,6 +139,7 @@ class MainActivity : AppCompatActivity() {
         //WebView.setWebContentsDebuggingEnabled(false)
         initWebView()
         pullUpToRefresh()
+        syncWithDB()
         onActivityResult()
         onFileChooserResult()
         bottomNavView.setOnItemSelectedListener { menuItem ->
@@ -130,16 +150,43 @@ class MainActivity : AppCompatActivity() {
                     return@setOnItemSelectedListener true
                 }
                 R.id.home -> {
-                    webView.loadUrl(CURRENT_URL + "home")
+                    webView.loadUrl("$CURRENT_URL/home")
                     return@setOnItemSelectedListener true
                 }
                 R.id.profile -> {
-                    webView.loadUrl(CURRENT_URL + "profile")
+                    webView.loadUrl("$CURRENT_URL/profile")
                     return@setOnItemSelectedListener true
                 }
             }
             false
         }
+    }
+
+    private fun syncWithDB() {
+        val token: TypeToken<List<Residents>> = object: TypeToken<List<Residents>>(){}
+        val gsonRequest = GsonRequest<List<Residents>>(
+            RESIDENTS_GET_URL, token,null,
+            { response ->
+                Log.i("Volley Residents Request", response[0].name)
+            },
+            { error ->
+                error.printStackTrace()
+            }
+        )
+        /*val jsonArrayRequest = JsonArrayRequest(
+            Request.Method.GET, Constants.RESIDENTS_GET_URL, null,
+            { response ->
+                for (i in 0 until response.length()) {
+                    val jsonObject = response.getJSONObject(i)
+                    Log.i("Volley GET Request", jsonObject.getString("name"))
+                }
+
+            },
+            { error ->
+                error.printStackTrace()
+            }
+        )*/
+        VolleySingleton.getInstance(this).addToRequestQueue(gsonRequest)
     }
 
     override fun onDestroy() {
@@ -193,7 +240,7 @@ class MainActivity : AppCompatActivity() {
         webView.settings.allowContentAccess = true
         webView.addJavascriptInterface(WebAppInterface(this), "Android")
 
-        webView.loadUrl(CURRENT_URL + "home")
+        webView.loadUrl("$CURRENT_URL/home")
     }
 
     private fun pullUpToRefresh() {
@@ -232,7 +279,7 @@ class MainActivity : AppCompatActivity() {
             description: String?,
             failingUrl: String?
         ) {
-            Toast.makeText(applicationContext, description, Toast.LENGTH_LONG).show()
+            //Toast.makeText(applicationContext, description, Toast.LENGTH_LONG).show()
             //webView.loadUrl("file:///android_asset/lost.html")
         }
 
@@ -242,7 +289,7 @@ class MainActivity : AppCompatActivity() {
             error: SslError?
         ) {
             super.onReceivedSslError(view, handler, error)
-
+            Log.e("SSL error", "SSL error $error")
         }
 
         override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
@@ -486,13 +533,16 @@ class MainActivity : AppCompatActivity() {
 
         //This is called by the courier
         @JavascriptInterface
-        fun startSendingLocations(user_id: String, user_type: String) {
+        fun User(user_id: String, user_type: String) {
             Log.i("User ID", user_id)
             Log.i("User Type", user_type)
             SharedPreferenceUtil.saveUserID(applicationContext, user_id.toInt())
-            //Toast.makeText(mContext, user_id, Toast.LENGTH_SHORT).show()
-            // TODO: check for the user role and return if it's not courier
-            userID = user_id
+            SharedPreferenceUtil.saveUserType(applicationContext, user_type)
+
+            //userID = user_id
+
+            if(user_type == "Camp Manager" || user_type == "Barangay Captain")
+                return
 
             if (!checkPermissions()) {
                 requestPermissions()
@@ -512,9 +562,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        const val DEV_PAGE_URL = "http://192.168.1.8:8000/"
-        const val PROD_PAGE_URL = "https://elikasphilippines.herokuapp.com/"
-        const val CURRENT_URL = DEV_PAGE_URL
         const val MAX_PROGRESS = 100
         private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
         const val REQUEST_SELECT_FILE = 120
