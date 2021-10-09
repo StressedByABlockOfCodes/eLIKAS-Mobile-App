@@ -35,6 +35,9 @@
         <action
             android:id="@+id/action_navigation_home_to_viewSMSFragment"
             app:destination="@id/viewSMSFragment" />
+        <action
+            android:id="@+id/action_navigation_home_to_BCViewNonEvacueesFragment"
+            app:destination="@id/BCViewNonEvacueesFragment" />
 
     </fragment>
     <fragment
@@ -77,5 +80,10 @@
         android:name="com.example.elikas.ui.sms.fragment.ViewSMSFragment"
         android:label="View"
         tools:layout="@layout/fragment_view_sms"/>
+    <fragment
+        android:id="@+id/BCViewNonEvacueesFragment"
+        android:name="com.example.elikas.ui.sms.fragment.BarangayCaptain.BCViewNonEvacueesFragment"
+        android:label="View"
+        tools:layout="@layout/fragment_bc_view_nonevacuees"/>
 
 </navigation>

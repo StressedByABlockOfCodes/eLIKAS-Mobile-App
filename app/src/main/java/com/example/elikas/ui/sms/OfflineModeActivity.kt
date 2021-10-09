@@ -39,7 +39,7 @@ class OfflineModeActivity : AppCompatActivity() {
                 R.id.CMAdmitFragment, R.id.BCAddFragment,
                 R.id.CMDischargeFragment, R.id.CMDispenseFragment,
                 R.id.CMRequestFragment, R.id.BCDispenseFragment,
-                R.id.viewSMSFragment
+                R.id.viewSMSFragment, R.id.BCViewNonEvacueesFragment
             )
         )
         //setupActionBarWithNavController(navController, appBarConfiguration)

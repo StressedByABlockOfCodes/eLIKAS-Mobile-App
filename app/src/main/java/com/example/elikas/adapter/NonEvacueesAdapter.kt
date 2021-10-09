@@ -1,20 +1,24 @@
 package com.example.elikas.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.elikas.R
 import com.example.elikas.data.Resident
+import com.example.elikas.data.User
+import com.example.elikas.utils.SharedPreferenceUtil
 
-class ResidentAdapter: ListAdapter<Resident, RecyclerView.ViewHolder>(ResidentDiffCallback()){
+class NonEvacueesAdapter: ListAdapter<Resident, RecyclerView.ViewHolder>(ResidentDiffCallback()){
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.resident_item, parent, false)
+            .inflate(R.layout.non_evacuees_item, parent, false)
 
         return ResidentViewHolder(view)
     }
@@ -29,10 +33,11 @@ class ResidentAdapter: ListAdapter<Resident, RecyclerView.ViewHolder>(ResidentDi
     }
 
     class ResidentViewHolder(view: View): RecyclerView.ViewHolder(view) {
-        val checkBoxResident: CheckBox = view.findViewById(R.id.checkBoxResident)
+        val txtViewNonEvacuees: TextView = view.findViewById(R.id.txtViewResident)
+
         val rootView = view
         fun bind(name: String?) {
-            checkBoxResident.text = name
+            txtViewNonEvacuees.text = name
         }
     }
 

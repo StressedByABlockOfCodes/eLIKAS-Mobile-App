@@ -11,17 +11,14 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:allowBackup="true"
+        android:name=".MainApplication"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.ELIKAS"> <!--android:networkSecurityConfig="@xml/network_security_config"-->
-        <activity
-            android:name=".ui.sms.OfflineModeActivity"
-            android:exported="true"
-            android:label="@string/title_activity_offline_mode" />
 
         <meta-data
             android:name="android.webkit.WebView.MetricsOptOut"
@@ -53,7 +50,15 @@
         <activity
             android:name=".ui.error.NoInternetActivity"
             android:exported="true"
-            android:screenOrientation="portrait" /> <!-- for android 29+ -->
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ui.sms.OfflineModeActivity"
+            android:exported="true"
+            android:label="@string/title_activity_offline_mode"
+            android:screenOrientation="portrait"/>
+
+        <!-- for android 29+ -->
         <service
             android:name=".service.ForegroundOnlyLocationService"
             android:enabled="true"

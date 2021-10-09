@@ -51,30 +51,31 @@ import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import android.location.LocationManager
 import android.net.Uri
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonArrayRequest
-import com.android.volley.toolbox.JsonObjectRequest
+import androidx.activity.viewModels
+import androidx.fragment.app.viewModels
 import com.example.elikas.R
+import com.example.elikas.MainApplication
 import com.example.elikas.ui.error.NoInternetActivity
 import com.example.elikas.ui.error.NoPermissionsActivity
 import com.example.elikas.utils.InternetConnectionUtil
 import com.example.elikas.utils.SharedPreferenceUtil
-import com.example.elikas.data.Residents
-import com.example.elikas.data.ResidentsResponseList
+import com.example.elikas.data.Resident
 import com.example.elikas.networking.GsonRequest
 import com.example.elikas.networking.VolleySingleton
-import com.example.elikas.utils.Constants
 import com.example.elikas.utils.Constants.CURRENT_URL
 import com.example.elikas.utils.Constants.RESIDENTS_GET_URL
-import org.json.JSONObject
+import com.example.elikas.viewmodel.ResidentViewModelFactory
+import com.example.elikas.viewmodel.ResidentsViewModel
 import com.google.gson.reflect.TypeToken
-
-
-
-
-
-
+import com.android.volley.DefaultRetryPolicy
+import com.example.elikas.data.Area
+import com.example.elikas.data.DisasterResponse
+import com.example.elikas.data.User
+import com.example.elikas.utils.Constants.AREA_GET_URL
+import com.example.elikas.utils.Constants.BARANGAY_RESIDENTS_GET_URL
+import com.example.elikas.utils.Constants.DISASTER_RESPONSE_GET_URL
+import com.example.elikas.viewmodel.DisasterResponseViewModel
+import com.example.elikas.viewmodel.DisasterResponseViewModelFactory
 
 
 class MainActivity : AppCompatActivity() {
@@ -83,7 +84,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var progressBar: ProgressBar
     private lateinit var swipeRefresh: SwipeRefreshLayout
     private lateinit var webView: WebView
-    private lateinit var userID: String
     private lateinit var launcher: ActivityResultLauncher<IntentSenderRequest>
     private lateinit var filechooserLauncher: ActivityResultLauncher<Intent>
 
@@ -93,7 +93,6 @@ class MainActivity : AppCompatActivity() {
     private var foregroundOnlyLocationService: ForegroundOnlyLocationService? = null
     // Listens for location broadcasts from ForegroundOnlyLocationService.
     private lateinit var foregroundOnlyBroadcastReceiver: ForegroundOnlyBroadcastReceiver
-    private lateinit var sharedPreferences: SharedPreferences
     // Monitors connection to the while-in-use service.
     private val foregroundOnlyServiceConnection = object : ServiceConnection {
 
@@ -109,8 +108,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private var mUploadMessage: ValueCallback<Uri>? = null
+    //private var mUploadMessage: ValueCallback<Uri>? = null
     private var uploadMessage: ValueCallback<Array<Uri>>? = null
+
+    private val viewModel: ResidentsViewModel by viewModels {
+        ResidentViewModelFactory((application as MainApplication).repository)
+    }
+
+    private val viewModelDR: DisasterResponseViewModel by viewModels {
+        DisasterResponseViewModelFactory((application as MainApplication).repositoryDR)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -139,7 +146,6 @@ class MainActivity : AppCompatActivity() {
         //WebView.setWebContentsDebuggingEnabled(false)
         initWebView()
         pullUpToRefresh()
-        syncWithDB()
         onActivityResult()
         onFileChooserResult()
         bottomNavView.setOnItemSelectedListener { menuItem ->
@@ -162,70 +168,54 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun syncWithDB() {
-        val token: TypeToken<List<Residents>> = object: TypeToken<List<Residents>>(){}
-        val gsonRequest = GsonRequest<List<Residents>>(
-            RESIDENTS_GET_URL, token,null,
-            { response ->
-                Log.i("Volley Residents Request", response[0].name)
-            },
-            { error ->
-                error.printStackTrace()
-            }
-        )
-        /*val jsonArrayRequest = JsonArrayRequest(
-            Request.Method.GET, Constants.RESIDENTS_GET_URL, null,
-            { response ->
-                for (i in 0 until response.length()) {
-                    val jsonObject = response.getJSONObject(i)
-                    Log.i("Volley GET Request", jsonObject.getString("name"))
-                }
-
-            },
-            { error ->
-                error.printStackTrace()
-            }
-        )*/
-        VolleySingleton.getInstance(this).addToRequestQueue(gsonRequest)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
     override fun onStart() {
         super.onStart()
 
         //sharedPreferences.registerOnSharedPreferenceChangeListener(this)
         // TODO: Call this when Android interface of courier is called or check user role in onStart if it is a Courier
-        val serviceIntent = Intent(this, ForegroundOnlyLocationService::class.java)
-        bindService(serviceIntent, foregroundOnlyServiceConnection, Context.BIND_AUTO_CREATE)
+        val user: User = SharedPreferenceUtil.getUser(this)
+        if(user.type == "Courier") {
+            val serviceIntent = Intent(this, ForegroundOnlyLocationService::class.java)
+            bindService(serviceIntent, foregroundOnlyServiceConnection, Context.BIND_AUTO_CREATE)
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-            foregroundOnlyBroadcastReceiver,
-            IntentFilter(
-                ForegroundOnlyLocationService.ACTION_FOREGROUND_ONLY_LOCATION_BROADCAST)
-        )
+
+        val user: User = SharedPreferenceUtil.getUser(this)
+        if(user.type == "Courier") {
+            LocalBroadcastManager.getInstance(this).registerReceiver(
+                foregroundOnlyBroadcastReceiver,
+                IntentFilter(
+                    ForegroundOnlyLocationService.ACTION_FOREGROUND_ONLY_LOCATION_BROADCAST)
+            )
+        }
     }
 
     override fun onPause() {
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(
-            foregroundOnlyBroadcastReceiver
-        )
         super.onPause()
+
+        val user: User = SharedPreferenceUtil.getUser(this)
+        if(user.type == "Courier") {
+            LocalBroadcastManager.getInstance(this).unregisterReceiver(
+                foregroundOnlyBroadcastReceiver
+            )
+        }
     }
 
     override fun onStop() {
-        if (foregroundOnlyLocationServiceBound) {
-            unbindService(foregroundOnlyServiceConnection)
-            foregroundOnlyLocationServiceBound = false
-        }
-        //sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
-
         super.onStop()
+
+        val user: User = SharedPreferenceUtil.getUser(this)
+        if(user.type == "Courier") {
+            if (foregroundOnlyLocationServiceBound) {
+                unbindService(foregroundOnlyServiceConnection)
+                foregroundOnlyLocationServiceBound = false
+            }
+        }
+
+        //sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -361,7 +351,8 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkPermissions(): Boolean {
         return PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this,
-            Manifest.permission.ACCESS_FINE_LOCATION)
+            Manifest.permission.ACCESS_FINE_LOCATION
+        )
     }
 
     private fun startLocationPermissionRequest() {
@@ -523,7 +514,7 @@ class MainActivity : AppCompatActivity() {
 
             if (location != null) {
                 //logResultsToScreen("Foreground location: ${location.toText()}")
-                Log.d(TAG, "${location.toText()}")
+                Log.d("Location Updates", location.toText())
             }
         }
     }
@@ -533,25 +524,32 @@ class MainActivity : AppCompatActivity() {
 
         //This is called by the courier
         @JavascriptInterface
-        fun User(user_id: String, user_type: String) {
+        fun currentUser(user_id: String, user_type: String) {
             Log.i("User ID", user_id)
             Log.i("User Type", user_type)
-            SharedPreferenceUtil.saveUserID(applicationContext, user_id.toInt())
-            SharedPreferenceUtil.saveUserType(applicationContext, user_type)
 
-            //userID = user_id
+            val user = User(user_id.toInt(), user_type)
+            SharedPreferenceUtil.saveUser(applicationContext, user)
 
-            if(user_type == "Camp Manager" || user_type == "Barangay Captain")
-                return
-
-            if (!checkPermissions()) {
-                requestPermissions()
-            } else {
-                if(isGPSProviderEnabled())
-                    foregroundOnlyLocationService?.subscribeToLocationUpdates()
-                else
-                    enableGPSPrompt()
+            if(user_type == "Courier") {
+                if (!checkPermissions()) {
+                    requestPermissions()
+                } else {
+                    if(isGPSProviderEnabled())
+                        foregroundOnlyLocationService?.subscribeToLocationUpdates()
+                    else
+                        enableGPSPrompt()
+                }
             }
+        }
+
+        @JavascriptInterface
+        fun areaOfFieldOfficer(designatedPlace: String, total: String) {
+            Log.i("designatedPlace", designatedPlace)
+            val area = Area(designatedPlace, total)
+            SharedPreferenceUtil.saveArea(applicationContext, area)
+
+            syncWithDB(designatedPlace)
         }
 
         @JavascriptInterface
@@ -559,6 +557,89 @@ class MainActivity : AppCompatActivity() {
             foregroundOnlyLocationService?.unsubscribeToLocationUpdates()
             SharedPreferenceUtil.reset(applicationContext)
         }
+    }
+
+    private fun getArea() {
+        val areaToken: TypeToken<Area> = object: TypeToken<Area>(){}
+        val areaGsonRequest = GsonRequest(
+            AREA_GET_URL, areaToken,null,
+            { response ->
+                if(response.toString() != "") {
+                    Log.i("Volley Area Request", response.toString())
+                    SharedPreferenceUtil.saveArea(applicationContext, response)
+                }
+            },
+            { error ->
+                error.printStackTrace()
+            }
+        )
+        areaGsonRequest.retryPolicy = DefaultRetryPolicy(
+            50000,
+            5,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
+        VolleySingleton.getInstance(this).addToRequestQueue(areaGsonRequest)
+    }
+
+    private fun syncWithDB(designatedPlace: String) {
+        if(!InternetConnectionUtil.isNetworkAvailable(this))
+            return
+
+        val token: TypeToken<List<Resident>> = object: TypeToken<List<Resident>>(){}
+        val user: User = SharedPreferenceUtil.getUser(this)
+        var url = ""
+        when(user.type) {
+            "Camp Manager" -> url = RESIDENTS_GET_URL
+            "Barangay Captain" -> url = BARANGAY_RESIDENTS_GET_URL + designatedPlace
+        }
+        Log.i("URL", url)
+        val residentsGsonRequest = GsonRequest(
+            url, token,null,
+            { response ->
+                if(response.isNotEmpty()) {
+                    Log.i("Volley Residents Request", response.toString())
+                    viewModel.insertAll(response)
+                }
+                else {
+                    viewModel.removeAll()
+                }
+            },
+            { error ->
+                error.printStackTrace()
+            }
+        )
+
+        val token_dr: TypeToken<List<DisasterResponse>> = object: TypeToken<List<DisasterResponse>>(){}
+        val DRGsonRequestDRGsonRequest = GsonRequest(
+            DISASTER_RESPONSE_GET_URL, token_dr,null,
+            { response ->
+                if(response.isNotEmpty()) {
+                    Log.i("Volley Disaster Response Request", response.toString())
+                    viewModelDR.insertAll(response)
+                }
+                else {
+                    viewModelDR.removeAll()
+                }
+            },
+            { error ->
+                error.printStackTrace()
+            }
+        )
+        /*val jsonArrayRequest = JsonArrayRequest(
+            Request.Method.GET, Constants.RESIDENTS_GET_URL, null,
+            { response ->
+                for (i in 0 until response.length()) {
+                    val jsonObject = response.getJSONObject(i)
+                    Log.i("Volley GET Request", jsonObject.getString("name"))
+                }
+
+            },
+            { error ->
+                error.printStackTrace()
+            }
+        )*/
+        VolleySingleton.getInstance(this).addToRequestQueue(residentsGsonRequest)
+        VolleySingleton.getInstance(this).addToRequestQueue(DRGsonRequestDRGsonRequest)
     }
 
     companion object {

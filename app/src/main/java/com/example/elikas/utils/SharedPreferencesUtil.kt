@@ -20,6 +20,9 @@ import android.content.Context
 import android.location.Location
 import androidx.core.content.edit
 import com.example.elikas.R
+import com.example.elikas.data.Area
+import com.example.elikas.data.User
+import com.google.gson.Gson
 
 /**
  * Returns the `location` object as a human readable string.
@@ -38,8 +41,8 @@ fun Location?.toText(): String {
 internal object SharedPreferenceUtil {
 
     const val KEY_FOREGROUND_ENABLED = "tracking_foreground_location"
-    const val KEY_USER_TYPE = "user_type"
-    const val KEY_USER_ID = "user_id"
+    const val KEY_USER = "current_user"
+    const val KEY_AREA = "area"
     const val KEY_GPS_ENABLED = "gps"
 
     /**
@@ -63,19 +66,47 @@ internal object SharedPreferenceUtil {
             putBoolean(KEY_FOREGROUND_ENABLED, requestingLocationUpdates)
         }
 
-    fun getUserID(context: Context): Int =
-        context.getSharedPreferences(
+    fun getUser(context: Context): User {
+        val user = context.getSharedPreferences(
             context.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
-            .getInt(KEY_USER_ID, -1)
+            .getString(KEY_USER, "")
 
-    fun saveUserID(context: Context, user_id: Int) =
+        val gson = Gson()
+        return gson.fromJson(user, User::class.java) ?: User(-1, "")
+    }
+
+    fun saveUser(context: Context, user: User) {
+        val gson = Gson()
+        val json: String = gson.toJson(user)
+
         context.getSharedPreferences(
             context.getString(R.string.preference_file_key),
             Context.MODE_PRIVATE).edit {
-            putInt(KEY_USER_ID, user_id)
+            putString(KEY_USER, json)
         }
+    }
 
-    fun getUserType(context: Context): String? =
+    fun getArea(context: Context): Area {
+        val area = context.getSharedPreferences(
+            context.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+            .getString(KEY_AREA, "")
+
+        val gson = Gson()
+        return gson.fromJson(area, Area::class.java) ?: Area("", "0")
+    }
+
+    fun saveArea(context: Context, area: Area) {
+        val gson = Gson()
+        val json: String = gson.toJson(area)
+
+        context.getSharedPreferences(
+            context.getString(R.string.preference_file_key),
+            Context.MODE_PRIVATE).edit {
+            putString(KEY_AREA, json)
+        }
+    }
+
+    /*fun getUserType(context: Context): String? =
         context.getSharedPreferences(
             context.getString(R.string.preference_file_key), Context.MODE_PRIVATE)
             .getString(KEY_USER_TYPE, null)
@@ -85,7 +116,7 @@ internal object SharedPreferenceUtil {
             context.getString(R.string.preference_file_key),
             Context.MODE_PRIVATE).edit {
             putString(KEY_USER_TYPE, user_type)
-        }
+        }*/
 
     fun setGPS(context: Context): Boolean =
         context.getSharedPreferences(

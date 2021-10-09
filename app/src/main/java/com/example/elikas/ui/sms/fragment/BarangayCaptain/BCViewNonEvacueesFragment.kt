@@ -1,4 +1,4 @@
-package com.example.elikas.ui.sms.fragment.CampManager
+package com.example.elikas.ui.sms.fragment.BarangayCaptain
 
 import android.content.Context
 import android.os.Bundle
@@ -9,16 +9,16 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.elikas.MainApplication
-import com.example.elikas.adapter.ResidentAdapter
-import com.example.elikas.databinding.FragmentCmDischargeBinding
+import com.example.elikas.adapter.NonEvacueesAdapter
+import com.example.elikas.databinding.FragmentBcViewNonevacueesBinding
 import com.example.elikas.viewmodel.ResidentViewModelFactory
 import com.example.elikas.viewmodel.ResidentsViewModel
 
 
-class CMDischargeFragment : Fragment() {
+class BCViewNonEvacueesFragment : Fragment() {
 
     private var mcontext: Context? = null
-    private var _binding: FragmentCmDischargeBinding? = null
+    private var _binding: FragmentBcViewNonevacueesBinding? = null
 
     private val viewModel: ResidentsViewModel by viewModels {
         ResidentViewModelFactory((requireActivity().application as MainApplication).repository)
@@ -33,16 +33,17 @@ class CMDischargeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentCmDischargeBinding.inflate(inflater, container, false)
+        _binding = FragmentBcViewNonevacueesBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
         return root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerView = binding.recyclerViewResidents
-        val adapter = ResidentAdapter()
+        val recyclerView = binding.recyclerViewNonEvacuees
+        val adapter = NonEvacueesAdapter()
         recyclerView.adapter = adapter
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(mcontext)
@@ -52,7 +53,7 @@ class CMDischargeFragment : Fragment() {
 
     }
 
-    private fun subscribeUi(adapter: ResidentAdapter) {
+    private fun subscribeUi(adapter: NonEvacueesAdapter) {
         viewModel.allResidents.observe(viewLifecycleOwner) { residents ->
             adapter.submitList(residents)
         }

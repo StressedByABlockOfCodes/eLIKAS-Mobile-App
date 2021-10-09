@@ -7,6 +7,7 @@
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/drawable/bg_gradient.xml" value="0.19583333333333333" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/drawable/bg_offline_message.xml" value="0.165234375" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/drawable/bg_rounded_rectangle.xml" value="0.165234375" />
+        <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/drawable/bg_spinner.xml" value="0.1824074074074074" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/drawable/border.xml" value="0.165234375" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1125" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/drawable/ic_logo_default.xml" value="0.21388888888888888" />
@@ -30,7 +31,9 @@
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/layout/fragment_bc_add_supply.xml" value="0.1814814814814815" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/layout/fragment_bc_dispense.xml" value="0.25" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/layout/fragment_bc_home.xml" value="0.22" />
-        <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/layout/fragment_cm_admit.xml" value="0.1814814814814815" />
+        <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/layout/fragment_bc_view_nonevacuees.xml" value="0.1814814814814815" />
+        <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/layout/fragment_cm_admit.xml" value="0.25" />
+        <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/layout/fragment_cm_discharge.xml" value="0.1814814814814815" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/layout/fragment_cm_dispense.xml" value="0.25" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/layout/fragment_cm_home.xml" value="0.25" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/layout/fragment_cm_request.xml" value="0.25" />
@@ -38,12 +41,13 @@
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/layout/fragment_cr_add_supply.xml" value="0.1814814814814815" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/layout/fragment_cr_home.xml" value="0.25" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/layout/fragment_discharge.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/layout/fragment_dispense.xml" value="0.1814814814814815" />
+        <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/layout/fragment_dispense.xml" value="0.25" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/layout/fragment_home.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/layout/fragment_notifications.xml" value="0.153125" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/layout/fragment_ofline_mode.xml" value="0.153125" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/layout/fragment_profile.xml" value="0.1814814814814815" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/layout/fragment_view_sms.xml" value="0.33" />
+        <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/layout/non_evacuees_item.xml" value="0.1814814814814815" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/layout/resident_item.xml" value="0.33" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/menu/bottom_nav_menu.xml" value="0.17657657657657658" />
         <entry key="..\:/Users/renie/AndroidStudioProjects/eLIKAS/app/src/main/res/menu/toolbar_menu.xml" value="0.153125" />

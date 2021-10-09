@@ -1,22 +1,28 @@
 package com.example.elikas.ui.sms.fragment.CampManager
 
-import android.R
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.elikas.MainApplication
+import com.example.elikas.adapter.ResidentAdapter
 import com.example.elikas.databinding.FragmentCmAdmitBinding
-import com.example.elikas.databinding.FragmentCmHomeBinding
+import com.example.elikas.viewmodel.ResidentViewModelFactory
+import com.example.elikas.viewmodel.ResidentsViewModel
 
 
 class CMAdmitFragment : Fragment() {
 
     private var mcontext: Context? = null
     private var _binding: FragmentCmAdmitBinding? = null
-    private lateinit var userType: String
+
+    private val viewModel: ResidentsViewModel by viewModels {
+        ResidentViewModelFactory((requireActivity().application as MainApplication).repository)
+    }
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -37,11 +43,22 @@ class CMAdmitFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val recyclerView = binding.recyclerViewResidents
+        val adapter = ResidentAdapter()
+        recyclerView.adapter = adapter
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(mcontext)
 
         //get the data from db and pass to the recyclerview
+        subscribeUi(adapter)
 
+    }
+
+    private fun subscribeUi(adapter: ResidentAdapter) {
+        viewModel.allResidents.observe(viewLifecycleOwner) { residents ->
+            adapter.submitList(residents)
+        }
+
+        //Log.i("getResidents", viewModel.getResidentsByFamCode("eLIKAS-JRKCsR").toString())
     }
 
     override fun onAttach(context: Context) {

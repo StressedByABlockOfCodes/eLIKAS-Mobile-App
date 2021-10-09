@@ -69,4 +69,19 @@
         <item name="android:background">@drawable/border</item>
     </style>
 
+    <style name="Widget.Spinner.Base" parent="ThemeOverlay.AppCompat">
+        <item name="android:spinnerItemStyle">@style/SpinnerItemStyle</item>
+        <item name="android:spinnerDropDownItemStyle">@style/spinnerDropDownItemStyle</item>
+        <item name="android:spinnerMode">dropdown</item>
+    </style>
+
+    <style name="SpinnerItemStyle">
+        <item name="android:fontFamily">@style/Widget.TextView.Normal</item>
+    </style>
+
+    <style name="spinnerDropDownItemStyle">
+        <item name="android:fontFamily">@style/Widget.TextView.Normal</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
 </resources>

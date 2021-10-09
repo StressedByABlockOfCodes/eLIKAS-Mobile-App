@@ -31,11 +31,12 @@ import android.os.Looper
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
-import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.example.elikas.ui.base.MainActivity
 import com.example.elikas.R
+import com.example.elikas.data.User
 import com.example.elikas.utils.SharedPreferenceUtil
 import com.example.elikas.networking.VolleySingleton
 import com.example.elikas.utils.Constants.LOCATION_POST_URL
@@ -121,8 +122,8 @@ class ForegroundOnlyLocationService : Service() {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 
-        val userid: Int = SharedPreferenceUtil.getUserID(this)
-        Log.i("SharedPref UserID", userid.toString())
+        val user: User = SharedPreferenceUtil.getUser(this)
+        Log.i("SharedPref UserID", user.id.toString())
         // TODO: Step 1.4, Initialize the LocationCallback.
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
@@ -132,8 +133,9 @@ class ForegroundOnlyLocationService : Service() {
                 // things a bit and just saving it as a local variable, as we only need it again
                 // if a Notification is created (when the user navigates away from app).
                 currentLocation = locationResult.lastLocation
+                Log.i("Location Updates", currentLocation?.latitude.toString() + "," + currentLocation?.longitude.toString())
 
-                volleyPostRequest(userid)
+                volleyPostRequest(user)
 
                 // Notify our Activity that a new location was added. Again, if this was a
                 // production app, the Activity would be listening for changes to a database
@@ -155,15 +157,15 @@ class ForegroundOnlyLocationService : Service() {
         }
     }
 
-    private fun volleyPostRequest(userid: Int) {
-        if(userid == -1 || currentLocation?.latitude == null || currentLocation?.longitude == null)
+    private fun volleyPostRequest(user: User) {
+        if(user.id == -1 || currentLocation?.latitude == null || currentLocation?.longitude == null)
             return
+
         //val queue = VolleySingleton.getInstance(applicationContext).requestQueue
-        Log.i("Location", currentLocation.toString())
 
         val postData = JSONObject()
         try {
-            postData.put("courier_id", userid)
+            postData.put("courier_id", user.id)
             postData.put("latitude", currentLocation?.latitude)
             postData.put("longitude", currentLocation?.longitude)
         } catch (e: JSONException) {
@@ -171,15 +173,20 @@ class ForegroundOnlyLocationService : Service() {
         }
         val jsonObjectRequest = JsonObjectRequest(
             Request.Method.POST, LOCATION_POST_URL, postData,
-            Response.Listener { response ->
+            { response ->
                 val res = response.toString()
                 Log.i("Volley POST: ", res)
             },
-            Response.ErrorListener { error ->
+            { error ->
                 error.printStackTrace()
             }
         )
         jsonObjectRequest.tag = VOLLEY_REQ
+        jsonObjectRequest.retryPolicy = DefaultRetryPolicy(
+            50000,
+            5,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
         VolleySingleton.getInstance(applicationContext).addToRequestQueue(jsonObjectRequest)
     }
 
@@ -260,6 +267,8 @@ class ForegroundOnlyLocationService : Service() {
             // TODO: Step 1.5, Subscribe to location changes.
             fusedLocationProviderClient.requestLocationUpdates(
                 locationRequest, locationCallback, Looper.getMainLooper())
+
+
         } catch (unlikely: SecurityException) {
             //SharedPreferenceUtil.saveLocationTrackingPref(this, false)
             Log.e(TAG, "Lost location permissions. Couldn't remove updates. $unlikely")
@@ -275,6 +284,8 @@ class ForegroundOnlyLocationService : Service() {
             removeTask.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Log.d(TAG, "Location Callback removed.")
+                    //to stop notification and the service
+                    stopForeground(true)
                     stopSelf()
                 } else {
                     Log.d(TAG, "Failed to remove Location Callback.")
@@ -308,8 +319,8 @@ class ForegroundOnlyLocationService : Service() {
         //      4. Build and issue the notification
 
         // 0. Get data
-        //val mainNotificationText = location?.toText() ?: getString(R.string.no_location_text)
-        val mainNotificationText = if(location?.toText() != null) getString(R.string.app_using_location) else getString(R.string.no_location_text)
+        val mainNotificationText = location?.toText() ?: getString(R.string.no_location_text)
+        //val mainNotificationText = if(location?.toText() != null) getString(R.string.app_using_location) else getString(R.string.no_location_text)
         val titleText = getString(R.string.app_name)
 
         // 1. Create Notification Channel for O+ and beyond devices (26+).

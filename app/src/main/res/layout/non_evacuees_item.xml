@@ -6,12 +6,13 @@
     android:paddingStart="6dp"
     android:paddingEnd="6dp">
 
-    <CheckBox
-        android:id="@+id/checkBoxResident"
+    <TextView
+        android:id="@+id/txtViewResident"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginStart="20dp"
         style="@style/Widget.TextView.Normal"
-        android:text="@string/add" />
+        android:text="@string/add"
+        android:gravity="center_vertical"/>
 
 </LinearLayout>

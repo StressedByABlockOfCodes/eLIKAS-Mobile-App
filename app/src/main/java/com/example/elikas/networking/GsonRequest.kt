@@ -5,7 +5,7 @@ import com.android.volley.ParseError
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.HttpHeaderParser
-import com.example.elikas.data.Residents
+import com.example.elikas.data.Resident
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
@@ -14,7 +14,7 @@ import java.nio.charset.Charset
 
 class GsonRequest<T>(
     url: String,
-    private val clazz: TypeToken<List<Residents>>,
+    private val clazz: TypeToken<T>,
     private val headers: MutableMap<String, String>?,
     private val listener: Response.Listener<T>,
     errorListener: Response.ErrorListener
