@@ -1,6 +1,9 @@
 package com.example.elikas.ui.sms
 
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +18,12 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.elikas.R
 import com.example.elikas.databinding.ActivityOfflineModeBinding
 import com.example.elikas.ui.base.MainActivity
+import com.example.elikas.ui.error.NoPermissionsActivity
+import com.example.elikas.utils.Constants
+import com.example.elikas.utils.PermissionsUtil
+import com.example.elikas.utils.PermissionsUtil.checkPermissions
+import com.example.elikas.utils.PermissionsUtil.startPermissionRequest
+import com.google.android.material.snackbar.Snackbar
 
 class OfflineModeActivity : AppCompatActivity() {
 
@@ -73,6 +82,40 @@ class OfflineModeActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNavigationView.setupWithNavController(navController)*/
+
+
+        if (!checkPermissions(this, "SMS")) {
+            startPermissionRequest(this, "SMS")
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        when (requestCode) {
+            Constants.REQUEST_PERMISSIONS_SEND_SMS -> when {
+                // Permission was cancelled.
+                grantResults.isEmpty() -> Log.d("OfflineModeActivity", "User interaction was cancelled.")
+                grantResults[0] == PackageManager.PERMISSION_GRANTED -> {
+                    // Permission was granted.
+                    Log.d("OfflineModeActivity", "SMS Permission granted.")
+                }
+                else -> {
+                    // Permission denied.
+                    Snackbar.make(findViewById(R.id.activity_main),
+                        R.string.permission_denied_explanation,
+                        Snackbar.LENGTH_INDEFINITE
+                    )
+                        .setAction(R.string.settings) {
+                            startPermissionRequest(
+                                this,
+                                "SMS"
+                            )
+                        }
+                        .show()
+                }
+            }
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -42,14 +42,15 @@ class BCViewNonEvacueesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerView = binding.recyclerViewNonEvacuees
+       /* val recyclerView = binding.recyclerViewNonEvacuees
         val adapter = NonEvacueesAdapter()
         recyclerView.adapter = adapter
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(mcontext)
 
         //get the data from db and pass to the recyclerview
-        subscribeUi(adapter)
+        subscribeUi(adapter)*/
+
 
     }
 

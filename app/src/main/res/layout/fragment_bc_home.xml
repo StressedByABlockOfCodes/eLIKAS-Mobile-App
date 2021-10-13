@@ -17,7 +17,7 @@
             android:id="@+id/linearlayout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
             android:baselineAligned="false"
             android:orientation="horizontal"
             android:weightSum="2">
@@ -34,7 +34,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/barangay"
                     android:theme="@style/Widget.TextView.Bold"
-                    android:textSize="14sp"/>
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:id="@+id/txtBarangayName"
@@ -42,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/evacuation_center_addr"
                     android:theme="@style/Widget.TextView.Normal"
-                    android:textSize="14sp"/>
+                    android:textSize="16sp"/>
 
             </LinearLayout>
 

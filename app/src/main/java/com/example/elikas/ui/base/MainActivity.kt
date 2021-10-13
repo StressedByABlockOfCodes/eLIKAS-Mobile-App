@@ -19,6 +19,7 @@ package com.example.elikas.ui.base
 
 import android.Manifest
 import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.Manifest.permission.SEND_SMS
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.*
@@ -74,6 +75,10 @@ import com.example.elikas.data.User
 import com.example.elikas.utils.Constants.AREA_GET_URL
 import com.example.elikas.utils.Constants.BARANGAY_RESIDENTS_GET_URL
 import com.example.elikas.utils.Constants.DISASTER_RESPONSE_GET_URL
+import com.example.elikas.utils.Constants.REQUEST_PERMISSIONS_REQUEST_CODE
+import com.example.elikas.utils.Constants.REQUEST_PERMISSIONS_SEND_SMS
+import com.example.elikas.utils.PermissionsUtil.checkPermissions
+import com.example.elikas.utils.PermissionsUtil.startPermissionRequest
 import com.example.elikas.viewmodel.DisasterResponseViewModel
 import com.example.elikas.viewmodel.DisasterResponseViewModelFactory
 
@@ -349,18 +354,6 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(applicationContext, "Failed to Upload Image", Toast.LENGTH_LONG).show()
     }*/
 
-    private fun checkPermissions(): Boolean {
-        return PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
-    }
-
-    private fun startLocationPermissionRequest() {
-        ActivityCompat.requestPermissions(this, arrayOf(ACCESS_FINE_LOCATION),
-            REQUEST_PERMISSIONS_REQUEST_CODE
-        )
-    }
-
     private fun requestPermissions() {
         if (ActivityCompat.shouldShowRequestPermissionRationale(this, ACCESS_FINE_LOCATION)) {
             Log.i(TAG, "Displaying permission rationale to provide additional context.")
@@ -368,11 +361,11 @@ class MainActivity : AppCompatActivity() {
             finish()
             /*Snackbar.make(findViewById(R.id.activity_main), R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.ok) {
-                    startLocationPermissionRequest()
+                    startPermissionRequest("GPS")
                 }.show()*/
         } else {
             Log.i(TAG, "Requesting permission")
-            startLocationPermissionRequest()
+            startPermissionRequest(this, "GPS")
         }
     }
 
@@ -532,7 +525,7 @@ class MainActivity : AppCompatActivity() {
             SharedPreferenceUtil.saveUser(applicationContext, user)
 
             if(user_type == "Courier") {
-                if (!checkPermissions()) {
+                if (!checkPermissions(this@MainActivity, "GPS")) {
                     requestPermissions()
                 } else {
                     if(isGPSProviderEnabled())
@@ -556,6 +549,8 @@ class MainActivity : AppCompatActivity() {
         fun logout() {
             foregroundOnlyLocationService?.unsubscribeToLocationUpdates()
             SharedPreferenceUtil.reset(applicationContext)
+            viewModel.removeAll()
+            viewModelDR.removeAll()
         }
     }
 
@@ -638,14 +633,22 @@ class MainActivity : AppCompatActivity() {
                 error.printStackTrace()
             }
         )*/
+        residentsGsonRequest.retryPolicy = DefaultRetryPolicy(
+            50000,
+            5,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
+        DRGsonRequestDRGsonRequest.retryPolicy = DefaultRetryPolicy(
+            50000,
+            5,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
         VolleySingleton.getInstance(this).addToRequestQueue(residentsGsonRequest)
         VolleySingleton.getInstance(this).addToRequestQueue(DRGsonRequestDRGsonRequest)
     }
 
     companion object {
         const val MAX_PROGRESS = 100
-        private const val REQUEST_PERMISSIONS_REQUEST_CODE = 34
-        const val REQUEST_SELECT_FILE = 120
         private const val TAG = "MainActivity"
     }
 

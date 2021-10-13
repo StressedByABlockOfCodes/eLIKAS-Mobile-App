@@ -9,10 +9,36 @@ class ResidentsViewModel(private val residentRepository: ResidentRepository) : V
 
     val allResidents: LiveData<List<Resident>> = residentRepository.allResidents.asLiveData()
 
-    fun getResidentsByFamCode(fam_code: String) = residentRepository.getResidentsByFamCode(fam_code)
+    fun getResidentsByFamCode(fam_code: String): LiveData<List<Resident>>
+        = residentRepository.getResidentsByFamCode(fam_code).asLiveData()
 
-    fun insertAll(allresident: List<Resident>) = viewModelScope.launch {
-        residentRepository.insertAll(allresident)
+    fun getEvacuees(): LiveData<List<Resident>>
+            = residentRepository.getEvacuees().asLiveData()
+
+    fun getNonEvacuees(): LiveData<List<Resident>>
+            = residentRepository.getNonEvacuees().asLiveData()
+
+    fun getFamilyHeadsEvacuees(): LiveData<List<Resident>>
+            =  residentRepository.getFamilyHeadsEvacuees().asLiveData()
+
+    fun changeToEvacuee(fam_code: String) = viewModelScope.launch {
+        residentRepository.changeToEvacuee(fam_code)
+    }
+
+    fun changeToNonEvacuee(fam_code: String) = viewModelScope.launch {
+        residentRepository.changeToNonEvacuee(fam_code)
+    }
+
+    fun changeToEvacuees(allResident: List<Resident>) = viewModelScope.launch {
+        residentRepository.changeToEvacuees(allResident)
+    }
+
+    fun changeToNonEvacuees(allResident: List<Resident>) = viewModelScope.launch {
+        residentRepository.changeToNonEvacuees(allResident)
+    }
+
+    fun insertAll(allResident: List<Resident>) = viewModelScope.launch {
+        residentRepository.insertAll(allResident)
     }
 
     fun removeAll() = viewModelScope.launch {

@@ -2,11 +2,11 @@ package com.example.elikas.ui.sms.fragment.CampManager
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.example.elikas.MainApplication
@@ -14,15 +14,33 @@ import com.example.elikas.databinding.FragmentDispenseBinding
 import com.example.elikas.viewmodel.DisasterResponseViewModel
 import com.example.elikas.viewmodel.DisasterResponseViewModelFactory
 import android.widget.AdapterView
+import androidx.navigation.findNavController
+import com.example.elikas.R
 import com.example.elikas.data.DisasterResponse
+import com.example.elikas.data.User
+import com.example.elikas.utils.SMSUtil
+import com.example.elikas.utils.SharedPreferenceUtil
+import com.example.elikas.data.Resident
+import com.example.elikas.viewmodel.ResidentViewModelFactory
+import com.example.elikas.viewmodel.ResidentsViewModel
 
 
-class CMDispenseFragment : Fragment(), AdapterView.OnItemSelectedListener {
+class CMDispenseFragment : Fragment() {
 
     private var mcontext: Context? = null
     private var _binding: FragmentDispenseBinding? = null
+    private lateinit var DisasterResponseList: List<DisasterResponse>
+    private lateinit var ResidentsList: List<Resident>
+    private lateinit var user: User
+    private lateinit var sms: SMSUtil
+    private var selectedDR: DisasterResponse? = null
+    private var selectedResident: Resident? = null
 
-    private val viewModel: DisasterResponseViewModel by viewModels {
+    private val viewModel: ResidentsViewModel by viewModels {
+        ResidentViewModelFactory((requireActivity().application as MainApplication).repository)
+    }
+
+    private val viewModelDR: DisasterResponseViewModel by viewModels {
         DisasterResponseViewModelFactory((requireActivity().application as MainApplication).repositoryDR)
     }
 
@@ -34,37 +52,89 @@ class CMDispenseFragment : Fragment(), AdapterView.OnItemSelectedListener {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentDispenseBinding.inflate(inflater, container, false)
-        val root: View = binding.root
-        return root
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val spinner: Spinner = binding.spinnerDr
-        var myList: List<DisasterResponse>? = null
+        user = SharedPreferenceUtil.getUser(view.context)
+        sms = SMSUtil(view.context)
 
+        //SELECTED DISASTER RESPONSE
+        //selectedDR = DisasterResponse(-1,"")
+        val drAdapter = ArrayAdapter<DisasterResponse>(
+            view.context,
+            android.R.layout.simple_spinner_item
+        )
+        drAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        viewModelDR.allDisasterResponses.observe(viewLifecycleOwner) { disaster_responses ->
+            DisasterResponseList = disaster_responses
+            disaster_responses?.forEach { drAdapter.add(it) }
+            drAdapter.notifyDataSetChanged()
+            binding.spinnerDr.adapter = drAdapter
 
-        viewModel.allDisasterResponses.observe(viewLifecycleOwner) { disaster_responses ->
-            val adapter = ArrayAdapter(
-                view.context,
-                android.R.layout.simple_spinner_item,
-                disaster_responses
-            )
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinner.adapter = adapter
         }
-    }
+        binding.spinnerDr.onItemSelectedListener = (object : AdapterView.OnItemSelectedListener {
 
-    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        TODO("Not yet implemented")
-        //pass to sms module
-    }
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
+                selectedDR = viewModelDR.allDisasterResponses.value?.get(pos)
 
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-        TODO("Not yet implemented")
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+            }
+        })
+
+        //SELECTED FAMILY HEAD
+        //ResidentsList = emptyList()
+        val residentsAdapter = ArrayAdapter<Resident>(
+            view.context,
+            android.R.layout.simple_spinner_item
+        )
+        residentsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        viewModel.getFamilyHeadsEvacuees().observe(viewLifecycleOwner) { residents ->
+            ResidentsList = residents
+            residents?.forEach { residentsAdapter.add(it) }
+            residentsAdapter.notifyDataSetChanged()
+            binding.spinnerDr.adapter = residentsAdapter
+        }
+        binding.spinnerDr.onItemSelectedListener = (object : AdapterView.OnItemSelectedListener {
+
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
+                if(ResidentsList.isNotEmpty())
+                    selectedResident = ResidentsList[pos]
+
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+            }
+        })
+
+        binding.btnAdmit.setOnClickListener {
+            val foodPacks = binding.edTextFoodPacks.text.toString().trim()
+            val water = binding.edTextWater.text.toString().trim()
+            val hygieneKit = binding.edTextHygieneKit.text.toString().trim()
+            val medicine = binding.edTextMedicine.text.toString().trim()
+            val clothes = binding.edTextClothes.text.toString().trim()
+            val esa = binding.edTextESA.text.toString().trim()
+
+            val finalDR = selectedDR?.id ?: ""
+            val finalResident = selectedResident?.id ?: ""
+
+            var message = "dispense,${user.id},$finalDR,$finalResident,"
+            message += "$foodPacks,$water,$hygieneKit,$medicine,$clothes,$esa"
+            Log.i(TAG, message)
+            sms.send(message)
+            view.findNavController().navigate(R.id.navigation_home)
+        }
+
+        binding.btnCancel.setOnClickListener {
+            view.findNavController().navigate(R.id.navigation_home)
+        }
+
     }
 
     override fun onAttach(context: Context) {
@@ -80,6 +150,10 @@ class CMDispenseFragment : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    companion object {
+        const val TAG = "CMDispenseFragment"
     }
 
 }

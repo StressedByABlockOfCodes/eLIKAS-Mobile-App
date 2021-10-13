@@ -13,7 +13,7 @@ import com.example.elikas.data.User
 import com.example.elikas.databinding.FragmentBcHomeBinding
 import com.example.elikas.databinding.FragmentCmHomeBinding
 import com.example.elikas.utils.SharedPreferenceUtil
-
+import com.example.elikas.utils.SMSUtil
 
 class HomeFragment : Fragment() {
 
@@ -22,6 +22,7 @@ class HomeFragment : Fragment() {
     private var _binding1: FragmentCmHomeBinding? = null
     private var _binding2: FragmentBcHomeBinding? = null
     private lateinit var user: User
+    private lateinit var sms: SMSUtil
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -32,7 +33,7 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         homeViewModel = ViewModelProvider(this).get(HomeViewModel::class.java)
 
         try {
@@ -70,6 +71,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val area = SharedPreferenceUtil.getArea(view.context)
+        sms = SMSUtil(view.context)
 
         when(user.type) {
             "Camp Manager" -> {
@@ -95,18 +97,21 @@ class HomeFragment : Fragment() {
         binding1.discharge.setOnClickListener { subview ->
             subview.findNavController().navigate(R.id.action_navigation_home_to_CMDischargeFragment)
         }
-        binding1.viewEvacuees.setOnClickListener { subview ->
-            //subview.findNavController().navigate(R.id.action_navigation_home_to_viewSMSFragment)
-            //sendviewEvacueesSMS()
-        }
         binding1.dispense.setOnClickListener { subview ->
             subview.findNavController().navigate(R.id.action_navigation_home_to_CMDispenseFragment)
         }
         binding1.request.setOnClickListener { subview ->
             subview.findNavController().navigate(R.id.action_navigation_home_to_CMRequestFragment)
         }
+        binding1.viewEvacuees.setOnClickListener { subview ->
+            //subview.findNavController().navigate(R.id.action_navigation_home_to_viewSMSFragment)
+            val message = "viewEvacuees,${user.id}"
+            sms.send(message)
+        }
         binding1.viewSupply.setOnClickListener { subview ->
-            subview.findNavController().navigate(R.id.action_navigation_home_to_viewSMSFragment)
+            //subview.findNavController().navigate(R.id.action_navigation_home_to_viewSMSFragment)
+            val message = "viewSupply,${user.id}"
+            sms.send(message)
         }
     }
 
@@ -118,10 +123,14 @@ class HomeFragment : Fragment() {
             subview.findNavController().navigate(R.id.action_navigation_home_to_BCDispenseFragment)
         }
         binding2.viewSupply.setOnClickListener { subview ->
-            subview.findNavController().navigate(R.id.action_navigation_home_to_viewSMSFragment)
+            //subview.findNavController().navigate(R.id.action_navigation_home_to_viewSMSFragment)
+            val message = "viewSupply,${user.id}"
+            sms.send(message)
         }
         binding2.viewNonevacuees.setOnClickListener { subview ->
-            subview.findNavController().navigate(R.id.action_navigation_home_to_BCViewNonEvacueesFragment)
+            //subview.findNavController().navigate(R.id.action_navigation_home_to_BCViewNonEvacueesFragment)
+            val message = "viewNonEvacuees,${user.id}"
+            sms.send(message)
         }
 
     }

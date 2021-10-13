@@ -21,9 +21,27 @@
             android:textSize="20sp"
             android:theme="@style/Widget.TextView.SemiBold" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/disaster_response"
+            android:textSize="14sp"
+            android:theme="@style/Widget.TextView.Normal" />
+
+        <Spinner
+            android:id="@+id/spinner_dr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/Widget.TextView.Normal"
+            android:background="@drawable/bg_spinner"
+            android:minHeight="48dp"
+            tools:ignore="SpeakableTextPresentCheck" />
+
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
 
             <TextView
                 android:id="@+id/txtSupplyType"
@@ -52,7 +70,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="3"
+            android:weightSum="4"
             android:layout_marginBottom="5dp"
             android:gravity="center"
             android:orientation="horizontal">
@@ -60,7 +78,7 @@
             <TextView
                 android:id="@+id/textFoodPacks"
                 android:layout_width="0dp"
-                android:layout_weight="2"
+                android:layout_weight="2.5"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:layout_marginBottom="8dp"
@@ -70,7 +88,7 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
                 android:layout_height="match_parent"
                 android:gravity="end"
                 android:orientation="horizontal">
@@ -86,8 +104,11 @@
                 <EditText
                     android:id="@+id/edText_FoodPacks"
                     style="@style/Widget.TextView.Normal"
-                    android:layout_width="38dp"
+                    android:layout_width="48dp"
                     android:layout_height="34dp"
+                    android:text="@string/zero"
+                    android:textSize="12sp"
+                    android:gravity="center"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
@@ -111,7 +132,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="3"
+            android:weightSum="4"
             android:layout_marginBottom="5dp"
             android:gravity="end"
             android:orientation="horizontal">
@@ -119,7 +140,7 @@
             <TextView
                 android:id="@+id/txtWater"
                 android:layout_width="0dp"
-                android:layout_weight="2"
+                android:layout_weight="2.5"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:layout_marginBottom="8dp"
@@ -129,7 +150,7 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
                 android:layout_height="match_parent"
                 android:gravity="end"
                 android:orientation="horizontal">
@@ -145,8 +166,11 @@
                 <EditText
                     android:id="@+id/edText_Water"
                     style="@style/Widget.TextView.Normal"
-                    android:layout_width="38dp"
+                    android:layout_width="48dp"
                     android:layout_height="34dp"
+                    android:text="@string/zero"
+                    android:textSize="12sp"
+                    android:gravity="center"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
@@ -170,14 +194,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="3"
+            android:weightSum="4"
             android:layout_marginBottom="5dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/txtClothes"
                 android:layout_width="0dp"
-                android:layout_weight="2"
+                android:layout_weight="2.5"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:layout_marginBottom="8dp"
@@ -187,7 +211,7 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
                 android:layout_height="match_parent"
                 android:gravity="end"
                 android:orientation="horizontal">
@@ -203,8 +227,11 @@
                 <EditText
                     android:id="@+id/edText_Clothes"
                     style="@style/Widget.TextView.Normal"
-                    android:layout_width="38dp"
+                    android:layout_width="48dp"
                     android:layout_height="34dp"
+                    android:text="@string/zero"
+                    android:textSize="12sp"
+                    android:gravity="center"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
@@ -228,14 +255,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="3"
+            android:weightSum="4"
             android:layout_marginBottom="5dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/txtHygieneKit"
                 android:layout_width="0dp"
-                android:layout_weight="2"
+                android:layout_weight="2.5"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:layout_marginBottom="8dp"
@@ -245,7 +272,7 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
                 android:layout_height="match_parent"
                 android:gravity="end"
                 android:orientation="horizontal">
@@ -261,8 +288,11 @@
                 <EditText
                     android:id="@+id/edText_HygieneKit"
                     style="@style/Widget.TextView.Normal"
-                    android:layout_width="38dp"
+                    android:layout_width="48dp"
                     android:layout_height="34dp"
+                    android:textSize="12sp"
+                    android:text="@string/zero"
+                    android:gravity="center"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
@@ -286,14 +316,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="3"
+            android:weightSum="4"
             android:layout_marginBottom="5dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/txtMedicine"
                 android:layout_width="0dp"
-                android:layout_weight="2"
+                android:layout_weight="2.5"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:layout_marginBottom="8dp"
@@ -303,7 +333,7 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
                 android:layout_height="match_parent"
                 android:gravity="end"
                 android:orientation="horizontal">
@@ -319,8 +349,11 @@
                 <EditText
                     android:id="@+id/edText_Medicine"
                     style="@style/Widget.TextView.Normal"
-                    android:layout_width="38dp"
+                    android:layout_width="48dp"
                     android:layout_height="34dp"
+                    android:text="@string/zero"
+                    android:textSize="12sp"
+                    android:gravity="center"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
@@ -344,13 +377,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="3"
+            android:weightSum="4"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/txtESA"
                 android:layout_width="0dp"
-                android:layout_weight="2"
+                android:layout_weight="2.5"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
                 android:layout_marginBottom="8dp"
@@ -360,7 +393,7 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_weight="1.5"
                 android:layout_height="match_parent"
                 android:gravity="end"
                 android:orientation="horizontal">
@@ -376,8 +409,11 @@
                 <EditText
                     android:id="@+id/edText_ESA"
                     style="@style/Widget.TextView.Normal"
-                    android:layout_width="38dp"
+                    android:layout_width="48dp"
                     android:layout_height="34dp"
+                    android:text="@string/zero"
+                    android:textSize="12sp"
+                    android:gravity="center"
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
@@ -399,9 +435,10 @@
         </LinearLayout>
 
         <EditText
+            android:id="@+id/edText_Note"
             android:layout_width="match_parent"
             android:layout_height="151dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="43dp"
             android:layout_marginBottom="43dp"
             style="@style/Widget.TextView.Normal"
             android:gravity="start"
@@ -426,7 +463,7 @@
                 style="@style/Widget.Button.SecondaryOutlined"/>
 
             <Button
-                android:id="@+id/btnAdmit"
+                android:id="@+id/btnRequest"
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"

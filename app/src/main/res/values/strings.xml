@@ -45,6 +45,8 @@
     <string name="preference_file_key">com.example.elikas.PREFERENCE_FILE_KEY</string>
     <string name="no_location_text">Current location not found</string>
 
+    <string name="zero">0</string>
+
     <string name="evacuation_center">Evacuation Center:</string>
     <string name="evacuation_center_addr">Del Rosario Elementary School</string>
     <string name="total_capacity">total capacity</string>
@@ -87,6 +89,7 @@
     <string name="add_supply">Add Supply</string>
     <string name="source">Source</string>
     <string name="enter_source">Enter Source</string>
+    <string name="enter_quantity">Enter Quantity</string>
     <string name="text_add">Add</string>
     <string name="non_evacuees">non-evacuees</string>
     <string name="family_rep">Family Representative</string>
@@ -109,6 +112,16 @@
         <br/>
         -eLIKAS
     </string>
+
+    <string-array name="supply_type_array">
+        <item>Food Packs</item>
+        <item>Water</item>
+        <item>Hygiene Kit</item>
+        <item>Mars</item>
+        <item>Mecicine</item>
+        <item>Clothes</item>
+        <item>ESA</item>
+    </string-array>
 
     <string name="title_activity_offline_mode">Home</string>
 

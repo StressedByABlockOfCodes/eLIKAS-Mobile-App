@@ -30,9 +30,11 @@
             android:theme="@style/Widget.TextView.Normal" />
 
         <Spinner
-            android:id="@+id/spinner_dr"
+            android:id="@+id/spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:theme="@style/Widget.Spinner.Base"
+            android:background="@drawable/bg_spinner"
             android:minHeight="48dp"
             tools:ignore="SpeakableTextPresentCheck" />
 
@@ -49,6 +51,7 @@
             android:id="@+id/txtQuantity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="@string/zero"
             android:background="@drawable/bg_offline_message"
             android:importantForAutofill="no"
             style="@style/Widget.TextView.Normal"
@@ -78,7 +81,7 @@
             android:importantForAutofill="no" />
 
         <Button
-            android:id="@+id/btnAdmit"
+            android:id="@+id/btnAdd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="43dp"

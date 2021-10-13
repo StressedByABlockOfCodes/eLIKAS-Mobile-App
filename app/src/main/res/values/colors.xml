@@ -9,4 +9,11 @@
     <color name="inactive">#DAE1EC</color>
     <color name="background">#F4F7FC</color>
     <color name="text">#2E3B52</color>
+
+    <color name="children">#D7E37D</color>
+    <color name="lactating">#FFB703</color>
+    <color name="pwd">#FB8500</color>
+    <color name="pregnant">#219EBC</color>
+    <color name="senior">#5464AF</color>
+    <color name="solo_parent">#023047</color>
 </resources>
