@@ -84,4 +84,10 @@
         <item name="android:padding">10dp</item>
     </style>
 
+    <style name="Widget.LoadingDialog.Base" parent="Theme.AppCompat.Light.Dialog">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@drawable/loading_shape</item>
+    </style>
+
 </resources>

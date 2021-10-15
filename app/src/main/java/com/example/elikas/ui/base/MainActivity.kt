@@ -17,7 +17,6 @@
 
 package com.example.elikas.ui.base
 
-import android.Manifest
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -62,7 +61,6 @@ import com.example.elikas.data.Resident
 import com.example.elikas.networking.GsonRequest
 import com.example.elikas.networking.VolleySingleton
 import com.example.elikas.utils.Constants.CURRENT_URL
-import com.example.elikas.utils.Constants.RESIDENTS_GET_URL
 import com.example.elikas.viewmodel.ResidentViewModelFactory
 import com.example.elikas.viewmodel.ResidentsViewModel
 import com.google.gson.reflect.TypeToken
@@ -70,6 +68,7 @@ import com.android.volley.DefaultRetryPolicy
 import com.example.elikas.data.Area
 import com.example.elikas.data.DisasterResponse
 import com.example.elikas.data.User
+import com.example.elikas.ui.custom.LoadingDialog
 import com.example.elikas.utils.Constants.AREA_GET_URL
 import com.example.elikas.utils.Constants.BARANGAY_RESIDENTS_GET_URL
 import com.example.elikas.utils.Constants.DISASTER_RESPONSE_GET_URL
@@ -89,6 +88,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var webView: WebView
     private lateinit var launcher: ActivityResultLauncher<IntentSenderRequest>
     private lateinit var filechooserLauncher: ActivityResultLauncher<Intent>
+    private lateinit var loadingDialog: LoadingDialog
 
     private lateinit var locationManager: LocationManager
     private var foregroundOnlyLocationServiceBound = false
@@ -234,6 +234,8 @@ class MainActivity : AppCompatActivity() {
         webView.addJavascriptInterface(WebAppInterface(this), "Android")
 
         webView.loadUrl("$CURRENT_URL/home")
+        loadingDialog = LoadingDialog(this@MainActivity)
+        loadingDialog.showDialog()
     }
 
     private fun pullUpToRefresh() {
@@ -250,7 +252,11 @@ class MainActivity : AppCompatActivity() {
     private inner class MyWebViewClient : WebViewClient() {
 
         override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
+            if(url == "$CURRENT_URL/home") {
+                if(!loadingDialog.isShowing())
+                    loadingDialog.showDialog()
 
+            }
             view.loadUrl(url)
             progressBar.visibility = View.VISIBLE
             return true
@@ -285,15 +291,24 @@ class MainActivity : AppCompatActivity() {
             Log.e("SSL error", "SSL error $error")
         }
 
-        override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
+        override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
             super.onPageStarted(view, url, favicon)
+            Log.i("url", url)
             progressBar.visibility = View.VISIBLE
+            if(url == "$CURRENT_URL/home") {
+                if(!loadingDialog.isShowing())
+                    loadingDialog.showDialog()
+            }
         }
 
         override fun onPageFinished(view: WebView, url: String) {
             super.onPageFinished(view, url)
             swipeRefresh.isRefreshing = false
             progressBar.visibility = View.GONE
+
+            if(url == "$CURRENT_URL/home") {
+                loadingDialog.close()
+            }
 
             /*try {
                 val cookies: String = CookieManager.getInstance().getCookie(url)
