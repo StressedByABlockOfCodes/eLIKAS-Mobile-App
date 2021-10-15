@@ -19,7 +19,6 @@ package com.example.elikas.ui.base
 
 import android.Manifest
 import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.Manifest.permission.SEND_SMS
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.*
@@ -53,7 +52,6 @@ import com.google.android.gms.location.*
 import android.location.LocationManager
 import android.net.Uri
 import androidx.activity.viewModels
-import androidx.fragment.app.viewModels
 import com.example.elikas.R
 import com.example.elikas.MainApplication
 import com.example.elikas.ui.error.NoInternetActivity
@@ -75,8 +73,8 @@ import com.example.elikas.data.User
 import com.example.elikas.utils.Constants.AREA_GET_URL
 import com.example.elikas.utils.Constants.BARANGAY_RESIDENTS_GET_URL
 import com.example.elikas.utils.Constants.DISASTER_RESPONSE_GET_URL
+import com.example.elikas.utils.Constants.EVACUEES_GET_URL
 import com.example.elikas.utils.Constants.REQUEST_PERMISSIONS_REQUEST_CODE
-import com.example.elikas.utils.Constants.REQUEST_PERMISSIONS_SEND_SMS
 import com.example.elikas.utils.PermissionsUtil.checkPermissions
 import com.example.elikas.utils.PermissionsUtil.startPermissionRequest
 import com.example.elikas.viewmodel.DisasterResponseViewModel
@@ -584,7 +582,7 @@ class MainActivity : AppCompatActivity() {
         val user: User = SharedPreferenceUtil.getUser(this)
         var url = ""
         when(user.type) {
-            "Camp Manager" -> url = RESIDENTS_GET_URL
+            "Camp Manager" -> url = EVACUEES_GET_URL + user.id
             "Barangay Captain" -> url = BARANGAY_RESIDENTS_GET_URL + designatedPlace
         }
         Log.i("URL", url)

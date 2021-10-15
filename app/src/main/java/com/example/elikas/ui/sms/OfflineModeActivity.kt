@@ -87,6 +87,7 @@ class OfflineModeActivity : AppCompatActivity() {
         if (!checkPermissions(this, "SMS")) {
             startPermissionRequest(this, "SMS")
         }
+
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

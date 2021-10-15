@@ -123,6 +123,8 @@
         <item>ESA</item>
     </string-array>
 
+    <string name="no_internet">No Internet Connection</string>
+
     <string name="title_activity_offline_mode">Home</string>
 
 </resources>

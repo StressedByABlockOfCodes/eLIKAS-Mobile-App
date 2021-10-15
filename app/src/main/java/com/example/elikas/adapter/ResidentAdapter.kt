@@ -64,7 +64,7 @@ class ResidentAdapter: ListAdapter<Resident, ResidentAdapter.ResidentViewHolder>
                 }
             }*/
 
-            checkBoxResident.setOnCheckedChangeListener(null);
+            checkBoxResident.setOnCheckedChangeListener(null)
             //if true, your checkbox will be selected, else unselected
             checkBoxResident.isChecked = resident.is_checked
             checkBoxResident.setOnCheckedChangeListener { buttonView, isChecked ->
@@ -115,10 +115,10 @@ class ResidentAdapter: ListAdapter<Resident, ResidentAdapter.ResidentViewHolder>
         }
     }
 
-    override fun onViewRecycled(holder: ResidentViewHolder) {
+    /*override fun onViewRecycled(holder: ResidentViewHolder) {
         //holder.checkBoxResident.isChecked = false // - this line do the trick
         super.onViewRecycled(holder)
-    }
+    }*/
 
     private class ResidentDiffCallback : DiffUtil.ItemCallback<Resident>() {
 
