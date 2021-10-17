@@ -82,41 +82,6 @@ class OfflineModeActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         bottomNavigationView.setupWithNavController(navController)*/
-
-
-        if (!checkPermissions(this, "SMS")) {
-            startPermissionRequest(this, "SMS")
-        }
-
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        when (requestCode) {
-            Constants.REQUEST_PERMISSIONS_SEND_SMS -> when {
-                // Permission was cancelled.
-                grantResults.isEmpty() -> Log.d("OfflineModeActivity", "User interaction was cancelled.")
-                grantResults[0] == PackageManager.PERMISSION_GRANTED -> {
-                    // Permission was granted.
-                    Log.d("OfflineModeActivity", "SMS Permission granted.")
-                }
-                else -> {
-                    // Permission denied.
-                    Snackbar.make(findViewById(R.id.activity_main),
-                        R.string.permission_denied_explanation,
-                        Snackbar.LENGTH_INDEFINITE
-                    )
-                        .setAction(R.string.settings) {
-                            startPermissionRequest(
-                                this,
-                                "SMS"
-                            )
-                        }
-                        .show()
-                }
-            }
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

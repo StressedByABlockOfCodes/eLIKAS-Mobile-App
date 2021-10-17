@@ -89,6 +89,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var launcher: ActivityResultLauncher<IntentSenderRequest>
     private lateinit var filechooserLauncher: ActivityResultLauncher<Intent>
     private lateinit var loadingDialog: LoadingDialog
+    private lateinit var user: User
 
     private lateinit var locationManager: LocationManager
     private var foregroundOnlyLocationServiceBound = false
@@ -128,9 +129,13 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        user = SharedPreferenceUtil.getUser(this)
         //Check first if there's internet connection
         //this is a temporary solution, will change to network listener in the future
         if(!InternetConnectionUtil.isNetworkAvailable(this)) {
+            if(user.type == "Courier")
+                return
+
             startActivity(Intent(this, NoInternetActivity::class.java))
             finish()
         }
@@ -176,7 +181,6 @@ class MainActivity : AppCompatActivity() {
 
         //sharedPreferences.registerOnSharedPreferenceChangeListener(this)
         // TODO: Call this when Android interface of courier is called or check user role in onStart if it is a Courier
-        val user: User = SharedPreferenceUtil.getUser(this)
         if(user.type == "Courier") {
             val serviceIntent = Intent(this, ForegroundOnlyLocationService::class.java)
             bindService(serviceIntent, foregroundOnlyServiceConnection, Context.BIND_AUTO_CREATE)
@@ -185,8 +189,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-
-        val user: User = SharedPreferenceUtil.getUser(this)
+        //val user: User = SharedPreferenceUtil.getUser(this)
         if(user.type == "Courier") {
             LocalBroadcastManager.getInstance(this).registerReceiver(
                 foregroundOnlyBroadcastReceiver,
@@ -198,8 +201,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
-
-        val user: User = SharedPreferenceUtil.getUser(this)
+        //val user: User = SharedPreferenceUtil.getUser(this)
         if(user.type == "Courier") {
             LocalBroadcastManager.getInstance(this).unregisterReceiver(
                 foregroundOnlyBroadcastReceiver
@@ -209,8 +211,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-
-        val user: User = SharedPreferenceUtil.getUser(this)
+        //val user: User = SharedPreferenceUtil.getUser(this)
         if(user.type == "Courier") {
             if (foregroundOnlyLocationServiceBound) {
                 unbindService(foregroundOnlyServiceConnection)
@@ -534,8 +535,8 @@ class MainActivity : AppCompatActivity() {
             Log.i("User ID", user_id)
             Log.i("User Type", user_type)
 
-            val user = User(user_id.toInt(), user_type)
-            SharedPreferenceUtil.saveUser(applicationContext, user)
+            val currentUser = User(user_id.toInt(), user_type)
+            SharedPreferenceUtil.saveUser(applicationContext, currentUser)
 
             if(user_type == "Courier") {
                 if (!checkPermissions(this@MainActivity, "GPS")) {
@@ -594,7 +595,7 @@ class MainActivity : AppCompatActivity() {
             return
 
         val token: TypeToken<List<Resident>> = object: TypeToken<List<Resident>>(){}
-        val user: User = SharedPreferenceUtil.getUser(this)
+        //val user: User = SharedPreferenceUtil.getUser(this)
         var url = ""
         when(user.type) {
             "Camp Manager" -> url = EVACUEES_GET_URL + user.id

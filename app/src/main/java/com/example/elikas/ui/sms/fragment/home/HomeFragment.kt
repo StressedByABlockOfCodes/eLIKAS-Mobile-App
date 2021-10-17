@@ -50,10 +50,10 @@ class HomeFragment : Fragment() {
                     return binding2.root
                 }
                 //add for the courier view
-                "Courier" -> {
+                /*"Courier" -> {
                     //switch to C home fragment
                     return binding1.root
-                }
+                }*/
             }
         } catch (e: IllegalStateException) {
             e.printStackTrace()
