@@ -1,6 +1,5 @@
 package com.example.elikas.data
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -13,4 +12,8 @@ data class Resident(
     val is_family_head: String,
     var type: String,
     var is_checked: Boolean
-)
+) {
+    override fun toString(): String {
+        return this.name
+    }
+}

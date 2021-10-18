@@ -133,11 +133,11 @@ class MainActivity : AppCompatActivity() {
         //Check first if there's internet connection
         //this is a temporary solution, will change to network listener in the future
         if(!InternetConnectionUtil.isNetworkAvailable(this)) {
-            if(user.type == "Courier")
-                return
-
-            startActivity(Intent(this, NoInternetActivity::class.java))
-            finish()
+            //Log.i(TAG, user.type)
+            if(user.type == "Camp Manager" || user.type == "Barangay Captain") {
+                startActivity(Intent(this, NoInternetActivity::class.java))
+                finish()
+            }
         }
 
         foregroundOnlyBroadcastReceiver = ForegroundOnlyBroadcastReceiver()
@@ -375,11 +375,11 @@ class MainActivity : AppCompatActivity() {
             finish()
             /*Snackbar.make(findViewById(R.id.activity_main), R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
                 .setAction(R.string.ok) {
-                    startPermissionRequest("GPS")
+                    startPermissionRequest("FINE_LOCATION")
                 }.show()*/
         } else {
             Log.i(TAG, "Requesting permission")
-            startPermissionRequest(this, "GPS")
+            startPermissionRequest(this, "FINE_LOCATION")
         }
     }
 
@@ -539,7 +539,7 @@ class MainActivity : AppCompatActivity() {
             SharedPreferenceUtil.saveUser(applicationContext, currentUser)
 
             if(user_type == "Courier") {
-                if (!checkPermissions(this@MainActivity, "GPS")) {
+                if (!checkPermissions(this@MainActivity, "FINE_LOCATION")) {
                     requestPermissions()
                 } else {
                     if(isGPSProviderEnabled())
@@ -561,6 +561,7 @@ class MainActivity : AppCompatActivity() {
 
         @JavascriptInterface
         fun logout() {
+            Log.i(TAG, "Logging Out")
             foregroundOnlyLocationService?.unsubscribeToLocationUpdates()
             SharedPreferenceUtil.reset(applicationContext)
             viewModel.removeAll()

@@ -94,12 +94,7 @@ class NoPermissionsActivity : AppCompatActivity() {
                 when (exception.statusCode) {
                     LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
                         try {
-                            // Cast to a resolvable exception.
                             val resolvable: ResolvableApiException = exception as ResolvableApiException
-                            // Show the dialog by calling startResolutionForResult(),
-                            // and check the result in onActivityResult().
-                            //resolvable.startResolutionForResult(this, LocationRequest.PRIORITY_HIGH_ACCURACY)
-
                             val intentSenderRequest = IntentSenderRequest.Builder(resolvable.resolution).build()
                             launcher.launch(intentSenderRequest)
 
@@ -110,11 +105,6 @@ class NoPermissionsActivity : AppCompatActivity() {
                         }
                     }
                     LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
-                        // Location settings are not satisfied. But could be fixed by showing the
-                        // user a dialog.
-
-                        // Location settings are not satisfied. However, we have no way to fix the
-                        // settings so we won't show the dialog.
                     }
                 }
             }

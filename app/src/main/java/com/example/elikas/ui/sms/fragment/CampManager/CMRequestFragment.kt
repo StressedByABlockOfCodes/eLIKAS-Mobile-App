@@ -99,6 +99,82 @@ class CMRequestFragment : Fragment() {
             view.findNavController().navigate(R.id.navigation_home)
         }
 
+        addButtonsInit()
+        minusdButtonsInit()
+
+    }
+
+    private fun addButtonsInit() {
+        binding.btnAddFoodPacks.setOnClickListener {
+            val num = binding.edTextFoodPacks.text.toString().toInt() + 1
+            binding.edTextFoodPacks.setText(num.toString())
+        }
+        binding.btnAddWater.setOnClickListener {
+            val num = binding.edTextWater.text.toString().toInt() + 1
+            binding.edTextWater.setText(num.toString())
+        }
+        binding.btnAddClothes.setOnClickListener {
+            val num = binding.edTextClothes.text.toString().toInt() + 1
+            binding.edTextClothes.setText(num.toString())
+        }
+        binding.btnAddHygieneKit.setOnClickListener {
+            val num = binding.edTextHygieneKit.text.toString().toInt() + 1
+            binding.edTextHygieneKit.setText(num.toString())
+        }
+        binding.btnAddMedicine.setOnClickListener {
+            val num = binding.edTextMedicine.text.toString().toInt() + 1
+            binding.edTextMedicine.setText(num.toString())
+        }
+        binding.btnAddESA.setOnClickListener {
+            val num = binding.edTextESA.text.toString().toInt() + 1
+            binding.edTextESA.setText(num.toString())
+        }
+    }
+
+    private fun minusdButtonsInit() {
+        binding.btnMinusFoodPacks.setOnClickListener {
+            var num = binding.edTextFoodPacks.text.toString().toInt()
+            if(binding.edTextFoodPacks.text.toString().toInt() > 0) {
+                num -= 1
+                binding.edTextFoodPacks.setText(num.toString())
+            }
+        }
+        binding.btnMinusWater.setOnClickListener {
+            var num = binding.edTextWater.text.toString().toInt()
+            if(binding.edTextWater.text.toString().toInt() > 0) {
+                num -= 1
+                binding.edTextWater.setText(num.toString())
+            }
+        }
+        binding.btnMinusClothes.setOnClickListener {
+            var num = binding.edTextClothes.text.toString().toInt()
+            if(binding.edTextClothes.text.toString().toInt() > 0) {
+                num -= 1
+                binding.edTextClothes.setText(num.toString())
+            }
+        }
+        binding.btnMinusHygieneKit.setOnClickListener {
+            var num = binding.edTextHygieneKit.text.toString().toInt()
+            if(binding.edTextHygieneKit.text.toString().toInt() > 0) {
+                num -= 1
+                binding.edTextHygieneKit.setText(num.toString())
+            }
+
+        }
+        binding.btnMinusMedicine.setOnClickListener {
+            var num = binding.edTextMedicine.text.toString().toInt()
+            if(binding.edTextMedicine.text.toString().toInt() > 0) {
+                num -= 1
+                binding.edTextMedicine.setText(num.toString())
+            }
+        }
+        binding.btnMinusESA.setOnClickListener {
+            var num = binding.edTextESA.text.toString().toInt()
+            if(binding.edTextESA.text.toString().toInt() > 0) {
+                num -= 1
+                binding.edTextESA.setText(num.toString())
+            }
+        }
     }
 
     override fun onAttach(context: Context) {

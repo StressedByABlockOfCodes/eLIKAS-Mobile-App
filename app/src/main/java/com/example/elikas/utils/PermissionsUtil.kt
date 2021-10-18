@@ -10,7 +10,7 @@ import com.example.elikas.utils.Constants.REQUEST_PERMISSIONS_SEND_SMS
 internal object PermissionsUtil {
     fun checkPermissions(activity: Activity, type: String): Boolean {
         return when (type) {
-            "GPS" -> {
+            "FINE_LOCATION" -> {
                 PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(
                     activity,
                     Manifest.permission.ACCESS_FINE_LOCATION
@@ -28,7 +28,7 @@ internal object PermissionsUtil {
 
     fun startPermissionRequest(activity: Activity, type: String) {
         when (type) {
-            "GPS" -> {
+            "FINE_LOCATION" -> {
                 ActivityCompat.requestPermissions(
                     activity,
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
