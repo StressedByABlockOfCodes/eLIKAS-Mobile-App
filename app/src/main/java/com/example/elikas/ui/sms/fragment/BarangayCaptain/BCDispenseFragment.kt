@@ -97,9 +97,10 @@ class BCDispenseFragment : Fragment() {
             ResidentsList = residents
             residents?.forEach { residentsAdapter.add(it) }
             residentsAdapter.notifyDataSetChanged()
-            binding.spinnerDr.adapter = residentsAdapter
+            binding.spinnerFamilyRep.adapter = residentsAdapter
+
         }
-        binding.spinnerDr.onItemSelectedListener = (object : AdapterView.OnItemSelectedListener {
+        binding.spinnerFamilyRep.onItemSelectedListener = (object : AdapterView.OnItemSelectedListener {
 
             override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
                 selectedResident = ResidentsList[pos]

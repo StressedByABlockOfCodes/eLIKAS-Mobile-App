@@ -180,7 +180,7 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
 
         //sharedPreferences.registerOnSharedPreferenceChangeListener(this)
-        // TODO: Call this when Android interface of courier is called or check user role in onStart if it is a Courier
+        //Call this when Android interface of courier is called or check user role in onStart if it is a Courier
         if(user.type == "Courier") {
             val serviceIntent = Intent(this, ForegroundOnlyLocationService::class.java)
             bindService(serviceIntent, foregroundOnlyServiceConnection, Context.BIND_AUTO_CREATE)
@@ -392,8 +392,10 @@ class MainActivity : AppCompatActivity() {
                 grantResults.isEmpty() -> Log.d(TAG, "User interaction was cancelled.")
                 // Permission was granted.
                 grantResults[0] == PackageManager.PERMISSION_GRANTED -> {
-                    if(isGPSProviderEnabled())
+                    if(isGPSProviderEnabled()) {
+                        Log.i(TAG, "Starting Location Updates")
                         foregroundOnlyLocationService?.subscribeToLocationUpdates()
+                    }
                     else
                         enableGPSPrompt()
                 }
@@ -540,12 +542,17 @@ class MainActivity : AppCompatActivity() {
 
             if(user_type == "Courier") {
                 if (!checkPermissions(this@MainActivity, "FINE_LOCATION")) {
-                    requestPermissions()
+                    //requestPermissions()
+                    startActivity(Intent(this@MainActivity, NoPermissionsActivity::class.java))
+                    finish()
                 } else {
                     if(isGPSProviderEnabled())
                         foregroundOnlyLocationService?.subscribeToLocationUpdates()
-                    else
-                        enableGPSPrompt()
+                    else{
+                        //enableGPSPrompt()
+                        startActivity(Intent(this@MainActivity, NoPermissionsActivity::class.java))
+                        finish()
+                    }
                 }
             }
         }
