@@ -21,63 +21,62 @@ import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.*
-import android.graphics.Bitmap
-import android.os.Bundle
-import android.view.View
-import android.widget.ProgressBar
-import androidx.appcompat.app.AppCompatActivity
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.example.elikas.databinding.ActivityMainBinding
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import android.net.http.SslError
-import android.util.Log
-import android.webkit.*
-
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
-
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.location.Location
+import android.location.LocationManager
+import android.net.Uri
+import android.net.http.SslError
+import android.os.Bundle
 import android.os.IBinder
+import android.util.Log
+import android.view.View
+import android.webkit.*
+import android.widget.ProgressBar
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.example.elikas.service.ForegroundOnlyLocationService
-import com.example.elikas.utils.toText
-import com.google.android.gms.common.api.ApiException
-import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.*
-import android.location.LocationManager
-import android.net.Uri
 import androidx.activity.viewModels
-import com.example.elikas.R
-import com.example.elikas.MainApplication
-import com.example.elikas.ui.error.NoInternetActivity
-import com.example.elikas.ui.error.NoPermissionsActivity
-import com.example.elikas.utils.InternetConnectionUtil
-import com.example.elikas.utils.SharedPreferenceUtil
-import com.example.elikas.data.Resident
-import com.example.elikas.networking.GsonRequest
-import com.example.elikas.networking.VolleySingleton
-import com.example.elikas.utils.Constants.CURRENT_URL
-import com.example.elikas.viewmodel.ResidentViewModelFactory
-import com.example.elikas.viewmodel.ResidentsViewModel
-import com.google.gson.reflect.TypeToken
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.volley.DefaultRetryPolicy
+import com.example.elikas.MainApplication
+import com.example.elikas.R
 import com.example.elikas.data.Area
 import com.example.elikas.data.DisasterResponse
+import com.example.elikas.data.Resident
 import com.example.elikas.data.User
+import com.example.elikas.databinding.ActivityMainBinding
+import com.example.elikas.networking.GsonRequest
+import com.example.elikas.networking.VolleySingleton
+import com.example.elikas.service.ForegroundOnlyLocationService
 import com.example.elikas.ui.custom.LoadingDialog
+import com.example.elikas.ui.error.NoInternetActivity
+import com.example.elikas.ui.error.NoPermissionsActivity
 import com.example.elikas.utils.Constants.AREA_GET_URL
 import com.example.elikas.utils.Constants.BARANGAY_RESIDENTS_GET_URL
+import com.example.elikas.utils.Constants.CURRENT_URL
 import com.example.elikas.utils.Constants.DISASTER_RESPONSE_GET_URL
 import com.example.elikas.utils.Constants.EVACUEES_GET_URL
 import com.example.elikas.utils.Constants.REQUEST_PERMISSIONS_REQUEST_CODE
+import com.example.elikas.utils.InternetConnectionUtil
 import com.example.elikas.utils.PermissionsUtil.checkPermissions
 import com.example.elikas.utils.PermissionsUtil.startPermissionRequest
+import com.example.elikas.utils.SharedPreferenceUtil
+import com.example.elikas.utils.toText
 import com.example.elikas.viewmodel.DisasterResponseViewModel
 import com.example.elikas.viewmodel.DisasterResponseViewModelFactory
+import com.example.elikas.viewmodel.ResidentViewModelFactory
+import com.example.elikas.viewmodel.ResidentsViewModel
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.gson.reflect.TypeToken
 
 
 class MainActivity : AppCompatActivity() {
@@ -334,6 +333,41 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        override fun onJsAlert(
+            view: WebView?,
+            url: String?,
+            message: String?,
+            result: JsResult
+        ): Boolean {
+            AlertDialog.Builder(this@MainActivity)
+                //.setTitle()
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok,
+                    DialogInterface.OnClickListener { dialog, which -> result.confirm() })
+                .setCancelable(false)
+                .create()
+                .show()
+            return true
+        }
+
+        override fun onJsConfirm(
+            view: WebView,
+            url: String,
+            message: String?,
+            result: JsResult
+        ): Boolean {
+            AlertDialog.Builder(this@MainActivity)
+                //.setTitle("Javascript Dialog")
+                .setMessage(message)
+                .setPositiveButton(android.R.string.ok,
+                    DialogInterface.OnClickListener { dialog, which -> result.confirm() })
+                .setNegativeButton(android.R.string.cancel,
+                    DialogInterface.OnClickListener { dialog, which -> result.cancel() })
+                .create()
+                .show()
+            return true
+        }
+
         override fun onShowFileChooser(webView: WebView?, filePathCallback: ValueCallback<Array<Uri>>?, fileChooserParams: FileChooserParams?): Boolean {
             uploadMessage?.onReceiveValue(null)
             uploadMessage = null
@@ -564,6 +598,12 @@ class MainActivity : AppCompatActivity() {
             SharedPreferenceUtil.saveArea(applicationContext, area)
 
             syncWithDB(designatedPlace)
+        }
+
+        @JavascriptInterface
+        fun updateResidents() {
+            val area = SharedPreferenceUtil.getArea(this@MainActivity)
+            syncWithDB(area.designated_place)
         }
 
         @JavascriptInterface
