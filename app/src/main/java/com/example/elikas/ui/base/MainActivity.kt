@@ -647,7 +647,8 @@ class MainActivity : AppCompatActivity() {
         var url = ""
         when(user.type) {
             "Camp Manager" -> url = EVACUEES_GET_URL + user.id
-            "Barangay Captain" -> url = BARANGAY_RESIDENTS_GET_URL + designatedPlace
+            "Barangay Captain" -> url = BARANGAY_RESIDENTS_GET_URL + designatedPlace.replace(" ", "%20")
+            //URLEncoder.encode(designatedPlace, "UTF-8")
         }
         Log.i("URL", url)
         val residentsGsonRequest = GsonRequest(

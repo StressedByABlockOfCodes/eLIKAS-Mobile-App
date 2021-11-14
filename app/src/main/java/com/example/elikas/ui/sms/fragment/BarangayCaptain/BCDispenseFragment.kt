@@ -93,7 +93,7 @@ class BCDispenseFragment : Fragment() {
             android.R.layout.simple_spinner_item
         )
         residentsAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        viewModel.getFamilyHeadsEvacuees().observe(viewLifecycleOwner) { residents ->
+        viewModel.getNonEvacuees().observe(viewLifecycleOwner) { residents ->
             ResidentsList = residents
             residents?.forEach { residentsAdapter.add(it) }
             residentsAdapter.notifyDataSetChanged()
