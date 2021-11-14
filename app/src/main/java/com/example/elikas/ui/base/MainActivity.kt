@@ -645,9 +645,14 @@ class MainActivity : AppCompatActivity() {
         val token: TypeToken<List<Resident>> = object: TypeToken<List<Resident>>(){}
         //val user: User = SharedPreferenceUtil.getUser(this)
         var url = ""
-        when(user.type) {
-            "Camp Manager" -> url = EVACUEES_GET_URL + user.id
-            "Barangay Captain" -> url = BARANGAY_RESIDENTS_GET_URL + designatedPlace.replace(" ", "%20")
+        val currentUser = SharedPreferenceUtil.getUser(applicationContext)
+        when(currentUser.type) {
+            "Camp Manager" -> url = EVACUEES_GET_URL + currentUser.id
+            "Barangay Captain" -> {
+                val place = designatedPlace.replace(" ", "%20")
+                url = BARANGAY_RESIDENTS_GET_URL + place
+                Log.i("URL", url)
+            }
             //URLEncoder.encode(designatedPlace, "UTF-8")
         }
         Log.i("URL", url)
