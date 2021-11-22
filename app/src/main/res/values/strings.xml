@@ -60,8 +60,9 @@
     <string name="request">Request</string>
 
     <string name="offline_message">
-        Offline mode message here.... <br />
-        remind the user that once internet connection is back, they will be redirected to webview
+        <!--Offline mode message here.... <br />
+        remind the user that once internet connection is back, they will be redirected to webview-->
+        <b>Reminder:</b> \n When internet connection becomes available, you will be redirected back to the Main Screen.
     </string>
     <string name="list">List of Residents</string>
     <string name="search_name">Search name</string>

@@ -46,10 +46,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.android.volley.DefaultRetryPolicy
 import com.example.elikas.MainApplication
 import com.example.elikas.R
-import com.example.elikas.data.Area
-import com.example.elikas.data.DisasterResponse
-import com.example.elikas.data.Resident
-import com.example.elikas.data.User
+import com.example.elikas.data.*
 import com.example.elikas.databinding.ActivityMainBinding
 import com.example.elikas.networking.GsonRequest
 import com.example.elikas.networking.VolleySingleton
@@ -64,6 +61,7 @@ import com.example.elikas.utils.Constants.DISASTER_RESPONSE_GET_URL
 import com.example.elikas.utils.Constants.EVACUEES_GET_URL
 import com.example.elikas.utils.Constants.REQUEST_PERMISSIONS_REQUEST_CODE
 import com.example.elikas.utils.InternetConnectionUtil
+import com.example.elikas.utils.NetworkStatusHelper
 import com.example.elikas.utils.PermissionsUtil.checkPermissions
 import com.example.elikas.utils.PermissionsUtil.startPermissionRequest
 import com.example.elikas.utils.SharedPreferenceUtil
@@ -76,6 +74,7 @@ import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.reflect.TypeToken
 
 
@@ -131,13 +130,32 @@ class MainActivity : AppCompatActivity() {
         user = SharedPreferenceUtil.getUser(this)
         //Check first if there's internet connection
         //this is a temporary solution, will change to network listener in the future
-        if(!InternetConnectionUtil.isNetworkAvailable(this)) {
+        /*if(!InternetConnectionUtil.isNetworkAvailable(this)) {
             //Log.i(TAG, user.type)
+            user = SharedPreferenceUtil.getUser(this)
             if(user.type == "Camp Manager" || user.type == "Barangay Captain") {
                 startActivity(Intent(this, NoInternetActivity::class.java))
                 finish()
             }
-        }
+        }*/
+
+        NetworkStatusHelper(this@MainActivity).observe(this, {
+            when(it){
+                NetworkStatus.Available -> {
+                    /*Snackbar
+                        .make(findViewById(R.id.activity_main),"Network Connection Established",Snackbar.LENGTH_SHORT)
+                        .show()*/
+                }
+                NetworkStatus.Unavailable -> {
+                    Toast.makeText(applicationContext, "No Internet Connection", Toast.LENGTH_SHORT).show()
+                    user = SharedPreferenceUtil.getUser(this)
+                    if(user.type == "Camp Manager" || user.type == "Barangay Captain") {
+                        startActivity(Intent(this, NoInternetActivity::class.java))
+                        finish()
+                    }
+                }
+            }
+        })
 
         foregroundOnlyBroadcastReceiver = ForegroundOnlyBroadcastReceiver()
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -221,6 +239,13 @@ class MainActivity : AppCompatActivity() {
         //sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
     }
 
+    override fun onDestroy() {
+        if(loadingDialog.isShowing()){
+            loadingDialog.close()
+        }
+        super.onDestroy()
+    }
+
     @SuppressLint("SetJavaScriptEnabled")
     private fun initWebView() {
         webView.webViewClient = MyWebViewClient()
@@ -233,9 +258,10 @@ class MainActivity : AppCompatActivity() {
         webView.settings.allowContentAccess = true
         webView.addJavascriptInterface(WebAppInterface(this), "Android")
 
-        webView.loadUrl("$CURRENT_URL/home")
+        webView.loadUrl("$CURRENT_URL/login")
         loadingDialog = LoadingDialog(this@MainActivity)
-        loadingDialog.showDialog()
+        if(!isFinishing)
+            loadingDialog.showDialog()
     }
 
     private fun pullUpToRefresh() {
@@ -253,10 +279,10 @@ class MainActivity : AppCompatActivity() {
 
         override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
             if(url == "$CURRENT_URL/home") {
-                if(!loadingDialog.isShowing())
+                if(!loadingDialog.isShowing() && !isFinishing)
                     loadingDialog.showDialog()
-
             }
+
             view.loadUrl(url)
             progressBar.visibility = View.VISIBLE
             return true
@@ -296,9 +322,10 @@ class MainActivity : AppCompatActivity() {
             Log.i("url", url)
             progressBar.visibility = View.VISIBLE
             if(url == "$CURRENT_URL/home") {
-                if(!loadingDialog.isShowing())
+                if(!loadingDialog.isShowing() && !isFinishing)
                     loadingDialog.showDialog()
             }
+
         }
 
         override fun onPageFinished(view: WebView, url: String) {
@@ -306,10 +333,15 @@ class MainActivity : AppCompatActivity() {
             swipeRefresh.isRefreshing = false
             progressBar.visibility = View.GONE
 
-            if(url == "$CURRENT_URL/home") {
-                loadingDialog.close()
+            if(url == "$CURRENT_URL/home" || url == "$CURRENT_URL/login" && !isFinishing) {
+                 loadingDialog.close()
             }
-
+            if(url == "$CURRENT_URL/login") {
+                binding.bottomNavView.visibility = View.GONE
+            }
+            else {
+                binding.bottomNavView.visibility = View.VISIBLE
+            }
             /*try {
                 val cookies: String = CookieManager.getInstance().getCookie(url)
                 Log.d("Cookie", cookies)

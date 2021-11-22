@@ -1,4 +1,6 @@
 package com.example.elikas.data
 
-class NetworkStatus {
+sealed class NetworkStatus {
+    object Available : NetworkStatus()
+    object Unavailable : NetworkStatus()
 }
