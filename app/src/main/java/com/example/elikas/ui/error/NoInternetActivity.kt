@@ -7,9 +7,14 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Button
 import com.example.elikas.R
+import com.example.elikas.data.NetworkStatus
+import com.example.elikas.data.User
+import com.example.elikas.ui.base.MainActivity
 import com.example.elikas.ui.sms.OfflineModeActivity
 import com.example.elikas.utils.Constants
+import com.example.elikas.utils.NetworkStatusHelper
 import com.example.elikas.utils.PermissionsUtil
+import com.example.elikas.utils.SharedPreferenceUtil
 import com.google.android.material.snackbar.Snackbar
 
 class NoInternetActivity : AppCompatActivity() {
@@ -17,6 +22,26 @@ class NoInternetActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_no_internet)
+
+        val user: User = SharedPreferenceUtil.getUser(this)
+        NetworkStatusHelper(this@NoInternetActivity).observe(this, {
+            when(it){
+                NetworkStatus.Available -> {
+                    Snackbar
+                        .make(findViewById(android.R.id.content),"Network Connection Established",Snackbar.LENGTH_LONG)
+                        .show()
+                    /*if(user.type == "Camp Manager" || user.type == "Barangay Captain") {
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
+                    }*/
+                }
+                NetworkStatus.Unavailable -> {
+                    Snackbar
+                        .make(findViewById(android.R.id.content),"No Internet Connection",Snackbar.LENGTH_LONG)
+                        .show()
+                }
+            }
+        })
 
         val btnOffline: Button = findViewById(R.id.btnSendDataOffline)
         btnOffline.setOnClickListener {

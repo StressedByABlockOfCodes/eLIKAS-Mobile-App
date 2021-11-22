@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -16,13 +17,18 @@ import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.elikas.R
+import com.example.elikas.data.NetworkStatus
+import com.example.elikas.data.User
 import com.example.elikas.databinding.ActivityOfflineModeBinding
 import com.example.elikas.ui.base.MainActivity
+import com.example.elikas.ui.error.NoInternetActivity
 import com.example.elikas.ui.error.NoPermissionsActivity
 import com.example.elikas.utils.Constants
+import com.example.elikas.utils.NetworkStatusHelper
 import com.example.elikas.utils.PermissionsUtil
 import com.example.elikas.utils.PermissionsUtil.checkPermissions
 import com.example.elikas.utils.PermissionsUtil.startPermissionRequest
+import com.example.elikas.utils.SharedPreferenceUtil
 import com.google.android.material.snackbar.Snackbar
 
 class OfflineModeActivity : AppCompatActivity() {
@@ -34,6 +40,22 @@ class OfflineModeActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityOfflineModeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val user: User = SharedPreferenceUtil.getUser(this)
+        NetworkStatusHelper(this@OfflineModeActivity).observe(this, {
+            when(it){
+                NetworkStatus.Available -> {
+                    Toast.makeText(applicationContext, "Network Connection Established", Toast.LENGTH_LONG).show()
+                    if(user.type == "Camp Manager" || user.type == "Barangay Captain") {
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
+                    }
+                }
+                NetworkStatus.Unavailable -> {
+
+                }
+            }
+        })
 
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
@@ -58,7 +80,6 @@ class OfflineModeActivity : AppCompatActivity() {
         bottomNavigationView.setOnItemSelectedListener { menuItem ->
             when(menuItem.itemId){
                 R.id.back -> {
-
                     super.onBackPressed()
                     return@setOnItemSelectedListener true
                 }
