@@ -79,16 +79,16 @@ class OfflineModeActivity : AppCompatActivity() {
         bottomNavigationView.setupWithNavController(navController)
         bottomNavigationView.setOnItemSelectedListener { menuItem ->
             when(menuItem.itemId){
-                R.id.back -> {
-                    super.onBackPressed()
-                    return@setOnItemSelectedListener true
-                }
                 R.id.home -> {
                     navController.navigate(R.id.navigation_home)
                     return@setOnItemSelectedListener true
                 }
+                R.id.chat -> {
+                    navController.navigate(R.id.navigation_profile) //show no internet
+                    return@setOnItemSelectedListener true
+                }
                 R.id.profile -> {
-                    navController.navigate(R.id.navigation_profile)
+                    navController.navigate(R.id.navigation_profile) //show no internet
                     return@setOnItemSelectedListener true
                 }
             }

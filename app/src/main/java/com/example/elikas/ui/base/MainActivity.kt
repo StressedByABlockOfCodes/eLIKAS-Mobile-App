@@ -1,20 +1,3 @@
-/*  Copyright 2019 Google LLC
- *  Copyright 2021 eLIKAS
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
-*/
-
-
 package com.example.elikas.ui.base
 
 import android.Manifest.permission.ACCESS_FINE_LOCATION
@@ -175,13 +158,12 @@ class MainActivity : AppCompatActivity() {
         onFileChooserResult()
         bottomNavView.setOnItemSelectedListener { menuItem ->
             when(menuItem.itemId){
-                R.id.back -> {
-                    if (webView.canGoBack())
-                        webView.goBack()
-                    return@setOnItemSelectedListener true
-                }
                 R.id.home -> {
                     webView.loadUrl("$CURRENT_URL/home")
+                    return@setOnItemSelectedListener true
+                }
+                R.id.chat -> {
+                    webView.loadUrl("$CURRENT_URL/chat")
                     return@setOnItemSelectedListener true
                 }
                 R.id.profile -> {
@@ -752,7 +734,7 @@ class MainActivity : AppCompatActivity() {
         private const val TAG = "MainActivity"
     }
 
-    /*override fun onBackPressed() {
+    override fun onBackPressed() {
         // if your webview can go back it will go back
         if (webView.canGoBack())
             webView.goBack()
@@ -760,6 +742,6 @@ class MainActivity : AppCompatActivity() {
         // it will exit the application
         else
             super.onBackPressed()
-    }*/
+    }
 
 }

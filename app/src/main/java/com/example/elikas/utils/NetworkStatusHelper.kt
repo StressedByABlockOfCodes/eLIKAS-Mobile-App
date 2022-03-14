@@ -1,3 +1,7 @@
+/*
+Tutorial from https://betterprogramming.pub/how-to-monitor-internet-connection-in-android-using-kotlin-and-livedata-135de9447796
+ */
+
 package com.example.elikas.utils
 
 import android.content.Context
